@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-space: #0a0e17;
+  --bg-panel: #0f1628;
+  --neon-cyan: #00f0ff;
+  --neon-magenta: #ff00aa;
+  --neon-green: #39ff14;
+}
+
+body {
+  @apply bg-space-900 font-sans text-slate-200 antialiased;
+  min-height: 100vh;
+}
+
+/* Scanline subtil — atmosferă terminal NASA */
+.scanline::after {
+  content: '';
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 240, 255, 0.02) 2px,
+    rgba(0, 240, 255, 0.02) 4px
+  );
+  z-index: 50;
+}
+
+@layer components {
+  .border-glow {
+    @apply border border-neon-cyan/40 shadow-neon-cyan;
+  }
+
+  .hud-panel {
+    @apply rounded-lg border border-neon-cyan/30 bg-space-800/90 backdrop-blur-sm;
+  }
+}
