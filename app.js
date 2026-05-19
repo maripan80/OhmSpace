@@ -10,7 +10,6 @@
 
   var limbaCurenta = "ro";
   var paginaManualCurenta = 0;
-  var piesaSelectata = null;
   var rezistentaMontata = null;
   var etichetaMontata = "";
   var misiuneReusita = false;
@@ -18,6 +17,9 @@
 
   var traduceri = {
     ro: {
+      atasamentSplashTitlu: "Atașament — Copertă intro",
+      splashSubtitlu: "Baza Lunară Artemis-Prime",
+      btnStart: "START",
       subtitluStart: "Simulare educațională — Fizică & Electronică",
       atasamentFundalTitlu: "Atașament imagine — Meniu principal",
       atasamentFundalHint: "Înlocuiește acest bloc cu imaginea ta (CSS background-image sau <img>).",
@@ -55,7 +57,7 @@
       labelBaterie: "Baterie",
       slotGol: "[ SLOT GOL ]",
       labelVentilator: "Ventilator",
-      hintMontare: "Selectează o piesă din inventar, apoi click pe slotul gol.",
+      hintMontare: "Trage rezistorul din inventar și plasează-l în slotul gol.",
       labelInventar: "Inventar piese",
       rez2: "Rezistor 2 Ω",
       rez12: "Rezistor 12 Ω",
@@ -73,6 +75,9 @@
       mesajFaraPiesa: "Montează un rezistor în slot înainte de a lansa curentul."
     },
     en: {
+      atasamentSplashTitlu: "Attachment — Intro cover",
+      splashSubtitlu: "Artemis-Prime Lunar Base",
+      btnStart: "START",
       subtitluStart: "Educational simulation — Physics & Electronics",
       atasamentFundalTitlu: "Image attachment — Main menu",
       atasamentFundalHint: "Replace this block with your image (CSS background-image or <img>).",
@@ -110,7 +115,7 @@
       labelBaterie: "Battery",
       slotGol: "[ EMPTY SLOT ]",
       labelVentilator: "Fan",
-      hintMontare: "Select a part from inventory, then click the empty slot.",
+      hintMontare: "Drag a resistor from inventory and drop it on the empty slot.",
       labelInventar: "Parts inventory",
       rez2: "Resistor 2 Ω",
       rez12: "Resistor 12 Ω",
@@ -129,7 +134,8 @@
   };
 
   var ecrane = {
-    start: document.getElementById("ecran-start"),
+    splash: document.getElementById("ecran-splash"),
+    meniu: document.getElementById("ecran-meniu"),
     hub: document.getElementById("ecran-hub"),
     misiune: document.getElementById("ecran-misiune")
   };
@@ -285,18 +291,24 @@
     }
   }
 
-  function selecteazaPiesa(buton) {
-    var butoane = document.querySelectorAll(".piesa-inventar");
-    var i;
-    for (i = 0; i < butoane.length; i++) {
-      butoane[i].classList.remove("selectat");
-    }
-    buton.classList.add("selectat");
-    piesaSelectata = {
-      valoare: parseInt(buton.getAttribute("data-rezistenta"), 10),
-      eticheta: buton.getAttribute("data-label"),
-      sprite: buton.getAttribute("data-sprite")
+  function datePiesaDinElement(el) {
+    return {
+      valoare: parseInt(el.getAttribute("data-rezistenta"), 10),
+      eticheta: el.getAttribute("data-label"),
+      sprite: el.getAttribute("data-sprite")
     };
+  }
+
+  function monteazaPiesa(date) {
+    if (!date || isNaN(date.valoare)) {
+      return;
+    }
+    rezistentaMontata = date.valoare;
+    etichetaMontata = date.eticheta;
+    slotRezistor.classList.add("montat");
+    slotRezistor.classList.remove("pulse-anim", "slot-hover");
+    actualizeazaSlotVizual();
+    reseteazaRezultatVizual();
   }
 
   function actualizeazaSlotVizual() {
@@ -319,16 +331,53 @@
     }
   }
 
-  function monteazaInSlot() {
-    if (!piesaSelectata) {
-      return;
+  // Drag & drop — inventar → slot
+  function initDragDrop() {
+    var piese = document.querySelectorAll(".piesa-inventar");
+    var i;
+
+    for (i = 0; i < piese.length; i++) {
+      piese[i].addEventListener("dragstart", function (ev) {
+        var date = datePiesaDinElement(this);
+        ev.dataTransfer.setData(
+          "application/ohmspace-piesa",
+          JSON.stringify(date)
+        );
+        ev.dataTransfer.effectAllowed = "move";
+        this.classList.add("trage-piesa");
+      });
+
+      piese[i].addEventListener("dragend", function () {
+        this.classList.remove("trage-piesa");
+        slotRezistor.classList.remove("slot-hover");
+      });
     }
-    rezistentaMontata = piesaSelectata.valoare;
-    etichetaMontata = piesaSelectata.eticheta;
-    slotRezistor.classList.add("montat");
-    slotRezistor.classList.remove("pulse-anim");
-    actualizeazaSlotVizual();
-    reseteazaRezultatVizual();
+
+    slotRezistor.addEventListener("dragover", function (ev) {
+      ev.preventDefault();
+      ev.dataTransfer.dropEffect = "move";
+      slotRezistor.classList.add("slot-hover");
+    });
+
+    slotRezistor.addEventListener("dragleave", function (ev) {
+      if (!slotRezistor.contains(ev.relatedTarget)) {
+        slotRezistor.classList.remove("slot-hover");
+      }
+    });
+
+    slotRezistor.addEventListener("drop", function (ev) {
+      ev.preventDefault();
+      slotRezistor.classList.remove("slot-hover");
+      var raw = ev.dataTransfer.getData("application/ohmspace-piesa");
+      if (!raw) {
+        return;
+      }
+      try {
+        monteazaPiesa(JSON.parse(raw));
+      } catch (err) {
+        /* date invalide la drop */
+      }
+    });
   }
 
   function obtineSvgVentilator() {
@@ -390,6 +439,10 @@
   }
 
   function initEvenimente() {
+    document.getElementById("btn-intro-start").addEventListener("click", function () {
+      arataEcran("meniu");
+    });
+
     document
       .getElementById("btn-porneste-misiune")
       .addEventListener("click", pornesteNivelSelectat);
@@ -422,7 +475,7 @@
     });
 
     document.getElementById("btn-hub-inapoi").addEventListener("click", function () {
-      arataEcran("start");
+      arataEcran("meniu");
     });
 
     document.getElementById("btn-nav-misiuni").addEventListener("click", function () {
@@ -441,7 +494,7 @@
     });
 
     document.getElementById("btn-misiune-inapoi").addEventListener("click", function () {
-      arataEcran("start");
+      arataEcran("meniu");
     });
 
     document.getElementById("btn-manual-din-joc").addEventListener("click", function () {
@@ -470,22 +523,15 @@
       }
     });
 
-    var piese = document.querySelectorAll(".piesa-inventar");
-    var p;
-    for (p = 0; p < piese.length; p++) {
-      piese[p].addEventListener("click", function () {
-        selecteazaPiesa(this);
-      });
-    }
-
-    slotRezistor.addEventListener("click", monteazaInSlot);
-
     document.getElementById("btn-lanseaza-curent").addEventListener("click", lanseazaCurent);
+
+    initDragDrop();
   }
 
   document.addEventListener("DOMContentLoaded", function () {
     initSpriteUri();
     initEvenimente();
+    arataEcran("splash");
     aplicaLimba();
     actualizeazaProgres();
   });

@@ -9,8 +9,24 @@
 </head>
 <body class="min-h-screen bg-slate-900 text-slate-100 font-mono antialiased">
 
+  <!-- Ecran 0: Intro / Splash -->
+  <section id="ecran-splash" class="ecran ecran-splash min-h-screen flex flex-col items-center justify-center p-6 gap-8">
+    <div class="zona-atasament zona-atasament-splash w-full max-w-2xl" data-fisier-exemplu="splash-cover.jpg">
+      <div class="atasament-cadru min-h-[200px] md:min-h-[260px]">
+        <span class="atasament-icon" aria-hidden="true">🖼</span>
+        <p class="atasament-titlu" data-i18n="atasamentSplashTitlu">Atașament — Copertă intro</p>
+        <p class="atasament-fisier">splash-cover.jpg</p>
+      </div>
+    </div>
+    <header class="text-center">
+      <h1 class="titlu-ohmspace text-6xl md:text-8xl font-bold tracking-widest mb-3">OhmSpace</h1>
+      <p class="text-cyan-400/80 text-sm uppercase tracking-[0.35em]" data-i18n="splashSubtitlu">Baza Lunară Artemis-Prime</p>
+    </header>
+    <button type="button" id="btn-intro-start" class="btn-neon btn-start-mare" data-i18n="btnStart">START</button>
+  </section>
+
   <!-- Ecran 1: Meniu principal -->
-  <section id="ecran-start" class="ecran min-h-screen p-4 md:p-8">
+  <section id="ecran-meniu" class="ecran hidden min-h-screen p-4 md:p-8">
     <div class="meniu-start-grid max-w-6xl mx-auto min-h-[calc(100vh-2rem)] grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-stretch">
 
       <!-- Stânga: zonă imagine / atașament -->
@@ -158,11 +174,11 @@
                 <span class="block text-xs text-slate-500" data-i18n="labelBaterie">Baterie</span>
               </div>
               <div class="linie-neon linie-oriz" aria-hidden="true"></div>
-              <button type="button" id="slot-rezistor" class="slot-gol pulse-anim" title="Click pentru a monta rezistorul">
+              <div id="slot-rezistor" class="slot-gol pulse-anim" data-zona-drop="rezistor">
                 <div id="continut-slot" class="continut-slot">
                   <span id="text-slot" class="text-slot-label" data-i18n="slotGol">[ SLOT GOL ]</span>
                 </div>
-              </button>
+              </div>
               <div class="linie-neon linie-oriz" aria-hidden="true"></div>
               <div id="ventilator-piesa" class="piesa-schema piesa-ventilator text-center px-3 py-2 rounded border-2 border-slate-600">
                 <div id="container-ventilator" class="sprite-wrap" data-sprite="ventilator"></div>
@@ -176,19 +192,19 @@
 
         <div class="panou-sf p-4">
           <h3 class="text-xs uppercase text-slate-500 mb-3 tracking-widest" data-i18n="labelInventar">Inventar piese</h3>
-          <div id="inventar-piese" class="flex flex-wrap gap-3 justify-center">
-            <button type="button" class="piesa-inventar" data-rezistenta="2" data-label="2 Ω" data-sprite="rezistor2">
+          <div id="inventar-piese" class="inventar-piese flex flex-wrap gap-3 justify-center">
+            <div class="piesa-inventar" draggable="true" data-rezistenta="2" data-label="2 Ω" data-sprite="rezistor2">
               <span class="sprite-inventar" aria-hidden="true"></span>
               <span class="eticheta-piesa" data-i18n="rez2">Rezistor 2 Ω</span>
-            </button>
-            <button type="button" class="piesa-inventar" data-rezistenta="12" data-label="12 Ω" data-sprite="rezistor12">
+            </div>
+            <div class="piesa-inventar" draggable="true" data-rezistenta="12" data-label="12 Ω" data-sprite="rezistor12">
               <span class="sprite-inventar" aria-hidden="true"></span>
               <span class="eticheta-piesa" data-i18n="rez12">Rezistor 12 Ω</span>
-            </button>
-            <button type="button" class="piesa-inventar" data-rezistenta="50" data-label="50 Ω" data-sprite="rezistor50">
+            </div>
+            <div class="piesa-inventar" draggable="true" data-rezistenta="50" data-label="50 Ω" data-sprite="rezistor50">
               <span class="sprite-inventar" aria-hidden="true"></span>
               <span class="eticheta-piesa" data-i18n="rez50">Rezistor 50 Ω</span>
-            </button>
+            </div>
           </div>
           <div class="mt-4 flex justify-center">
             <button type="button" id="btn-lanseaza-curent" class="btn-neon" data-i18n="btnLanseaza">Lansează Curentul</button>

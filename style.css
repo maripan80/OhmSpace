@@ -21,6 +21,23 @@ body {
   font-family: "Consolas", "Courier New", ui-monospace, monospace;
 }
 
+/* Ecran splash / intro */
+.ecran-splash {
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(34, 211, 238, 0.1) 0%, transparent 55%),
+    var(--fundal);
+}
+
+.btn-start-mare {
+  padding: 1rem 3.5rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.35em;
+}
+
+.zona-atasament-splash .atasament-cadru {
+  min-height: 200px;
+}
+
 /* Titlu principal cyberpunk */
 .titlu-ohmspace {
   color: var(--text);
@@ -338,6 +355,12 @@ body {
   background: rgba(34, 211, 238, 0.14);
 }
 
+.slot-gol.slot-hover {
+  background: rgba(34, 211, 238, 0.22);
+  border-color: var(--verde-neon);
+  box-shadow: 0 0 24px rgba(74, 222, 128, 0.35);
+}
+
 .slot-gol.montat {
   border-style: solid;
   background: rgba(74, 222, 128, 0.1);
@@ -378,25 +401,31 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* Piese inventar — buton */
+/* Piese inventar — drag & drop */
 .piesa-inventar {
   padding: 0.5rem 0.65rem;
   color: var(--text);
   background: rgba(51, 65, 85, 0.5);
   border: 1px solid rgba(148, 163, 184, 0.35);
   border-radius: 3px;
-  cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  cursor: grab;
+  user-select: none;
+  transition: border-color 0.15s, box-shadow 0.15s, opacity 0.15s;
 }
 
 .piesa-inventar:hover {
   border-color: var(--cyan-neon);
 }
 
-.piesa-inventar.selectat {
+.piesa-inventar.trage-piesa {
+  opacity: 0.55;
+  cursor: grabbing;
   border-color: var(--cyan-neon);
   box-shadow: 0 0 16px rgba(34, 211, 238, 0.35);
-  color: var(--cyan-neon);
+}
+
+.piesa-inventar:active {
+  cursor: grabbing;
 }
 
 /* Mesaje rezultat */
