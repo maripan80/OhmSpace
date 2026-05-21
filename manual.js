@@ -7,7 +7,6 @@ var translations = {
     splashSubtitlu: "Baza Lunară Artemis-Prime",
     btnStart: "START",
     subtitluStart: "Simulare educațională — Fizică & Electronică",
-    hudStatus: "Sistem online — Artemis-Prime",
     labelGhidMeniu: "Consilier — OHM-7",
     ghidMeniu1: "Alege o misiune. Citește manualul pentru teorie.",
     titluNiveluri: "Selectează nivelul",
@@ -68,7 +67,6 @@ var translations = {
     splashSubtitlu: "Artemis-Prime Lunar Base",
     btnStart: "START",
     subtitluStart: "Educational simulation — Physics & Electronics",
-    hudStatus: "System online — Artemis-Prime",
     labelGhidMeniu: "Advisor — OHM-7",
     ghidMeniu1: "Pick a mission. Read the manual for theory.",
     titluNiveluri: "Select level",
@@ -463,8 +461,8 @@ var manualPageDefs = [
       titlu: { ro: "Tensiuni în serie", en: "Series voltages" },
       paragrafe: [
         {
-          ro: "În serie, tensiunile se adună:",
-          en: "In series, voltages add up:"
+          ro: "Atunci când două sau mai multe baterii sunt conectate în serie (borna + a unei baterii legată la borna - a următoarei), tensiunile lor se ADUNĂ.",
+          en: "When two or more batteries are connected in series (the + terminal of one battery connected to the - terminal of the next), their voltages ADD UP."
         },
         {
           ro: "U_total = U₁ + U₂ + …",
@@ -593,52 +591,42 @@ var jurnalPageDefs = [
           ro: "Sub-stația principală rulează la 24 V.",
           en: "Main substation running at 24 V."
         },
-        {
+        { 
           ro: "Am montat releul pentru antenă — urmează testul diodei.",
           en: "Mounted the antenna relay — diode test next."
         }
       ]
     },
     dreapta: {
-      titlu: { ro: "Apărare", en: "Defense" },
+      titlu: { ro: "Lag", en: "Lag" },
       paragrafe: [
         {
-          ro: "Laserul de proximitate folosește condensatori mari.",
-          en: "Proximity laser uses large capacitors."
+          ro: "Comunicațiile cu Pământul au o întârziere de 1.3 secunde. Sună puțin, dar e suficient cât să intre în buclă orice sistem de comandă automată. De aceea, pentru manevre critice de andocare, folosim circuite logice cablate (hardwired), nu software. E mult mai sigur să te bazezi pe o diodă decât pe un algoritm care 'gândește' cu întârziere.",
+          en: "Communication with Earth has a 1.3 second delay. It may sound little, but it's enough to enter any automatic control loop. Therefore, for critical docking maneuvers, we use hardwired logic circuits (hardwired), not software. It is much safer to rely on a diode than on an algorithm that 'thinks' with a delay."
         },
-        {
-          ro: "În vid, un burst e totuși vizibil doar ca flash optic.",
-          en: "In vacuum, a burst is only visible as an optical flash."
-        }
+
       ]
     }
   },
   {
     // Pagina 1
     stanga: {
-      titlu: { ro: "Notă — Lună", en: "Note — Moon" },
+      titlu: { ro: "Spatiu", en: "Space" },
       paragrafe: [
         {
-          ro: "Fără atmosferă, descărcarea unui condensator e silențioasă.",
-          en: "Without atmosphere, capacitor discharge is silent."
+          ro: "Un lucru pe care nu-l înveți la facultate: în vidul spațial, electronica se supraîncălzește mult mai repede. Pe Pământ, aerul disipă căldura prin convecție. Aici, singura cale de răcire este radiația termică. Dacă indicatorul de temperatură sare de 80°C, opriți tot sau placa de bază va deveni o pastă de siliciu.",
+          en: "In space, electronics heat up much faster than on Earth. On Earth, air dissipates heat by convection. Here, the only cooling method is thermal radiation. If the temperature gauge jumps to 80°C, shut down everything or the base plate will become silicon paste."
         },
-        {
-          ro: "OHM-7 spune că asta e «fizică pură».",
-          en: "OHM-7 calls it «pure physics»."
-        }
+
       ]
     },
     dreapta: {
-      titlu: { ro: "Proiect", en: "Project" },
+      titlu: { ro: "Fun facts", en: "Fun facts" },
       paragrafe: [
+
         {
-          ro: "OhmSpace — simulare Artemis-Prime.",
-          en: "OhmSpace — Artemis-Prime simulation.",
-          emphasis: true
-        },
-        {
-          ro: "InfoEducație — circuite, formule, misiuni.",
-          en: "InfoEducație — circuits, formulas, missions."
+          ro: "Praful lunar (regolitul) nu e ca praful de pe Pământ. Este format din particule extrem de abrazive, ca niște cioburi de sticlă microscopice. A intrat în circuitele stației și a cauzat mai multe scurtcircuite decât radiația cosmică. Dacă auziți un zgomot de nisip în ventilație, verificați imediat siguranțele.",
+          en: "The lunar dust (regolith) is not like the dust on Earth. It is made of extremely abrasive particles, like tiny glass shards. It entered the station's circuits and caused more short circuits than cosmic radiation. If you hear sand noise in ventilation, check the fuses immediately."
         }
       ]
     }
