@@ -10,15 +10,32 @@
 <body class="min-h-screen bg-slate-900 text-slate-100 font-mono antialiased">
 
   <!-- Ecran 0: Intro / Splash -->
-  <section id="ecran-splash" class="ecran ecran-splash min-h-screen flex flex-col items-center justify-center p-6 gap-8">
-    <figure class="attachment attachment-splash w-full max-w-2xl">
-      <img src="poze/nava.png" alt="Suprafața Lunii" class="w-full h-auto rounded">
+  <section id="ecran-splash" class="ecran ecran-splash min-h-screen flex flex-col items-center justify-center p-6 gap-6" style="background-image: url('poze/aiabuna.jpeg');">
+
+    <!-- Setări limbă — colț dreapta-sus -->
+    <div class="splash-setari-wrap">
+      <button type="button" id="btn-splash-setari" class="btn-splash-setari" aria-label="Setări" aria-expanded="false" aria-controls="meniu-limba-splash">
+        <i data-lucide="settings" class="icon-splash-setari" aria-hidden="true"></i>
+        <span class="sr-only" data-i18n="btnSetari">Setări</span>
+      </button>
+      <div id="meniu-limba-splash" class="meniu-limba-splash hidden" role="menu" aria-label="Limba interfeței">
+        <p class="meniu-limba-titlu" data-i18n="labelLimba">Limba interfeței</p>
+        <div class="meniu-limba-optiuni">
+          <button type="button" class="opt-limba activ" data-limba="ro" role="menuitem">RO</button>
+          <button type="button" class="opt-limba" data-limba="en" role="menuitem">EN</button>
+        </div>
+      </div>
+    </div>
+
+    <figure class="attachment attachment-splash splash-nava max-w-sm md:max-w-md mx-auto">
+      <img src="poze/nava2.png" alt="Navă spațială Artemis-Prime" class="w-auto h-auto max-h-70 mx-auto">
     </figure>
-    <header class="text-center">
+    <header class="splash-header text-center">
       <h1 class="titlu-ohmspace text-6xl md:text-8xl font-bold tracking-widest mb-3">OhmSpace</h1>
       <p class="text-cyan-400/80 text-sm uppercase tracking-[0.35em]" data-i18n="splashSubtitlu">Baza Lunară Artemis-Prime</p>
     </header>
     <button type="button" id="btn-intro-start" class="btn-neon btn-start-mare" data-i18n="btnStart">START</button>
+    <p class="splash-credit">Proiect educațional - InfoEducație</p>
   </section>
 
   <!-- Ecran 1: Meniu principal -->
@@ -227,6 +244,7 @@
     </div>
   </div>
 
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <script src="sprites.js"></script>
   <script src="manual.js"></script>
   <script src="app.js"></script>

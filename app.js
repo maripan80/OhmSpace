@@ -197,8 +197,32 @@
     if (titluModal) {
       titluModal.textContent = textTradus("titluManual");
     }
+    actualizeazaIndicatoareLimba();
     actualizeazaSlotVizual();
     actualizeazaPaginaManual();
+  }
+
+  // Sincronizează RO/EN între splash și meniul principal
+  function seteazaLimba(cod) {
+    limbaCurenta = cod === "en" ? "en" : "ro";
+    var select = document.getElementById("select-limba");
+    if (select) {
+      select.value = limbaCurenta;
+    }
+    aplicaLimba();
+  }
+
+  function actualizeazaIndicatoareLimba() {
+    var optiuni = document.querySelectorAll(".opt-limba");
+    var j;
+    for (j = 0; j < optiuni.length; j++) {
+      var cod = optiuni[j].getAttribute("data-limba");
+      if (cod === limbaCurenta) {
+        optiuni[j].classList.add("activ");
+      } else {
+        optiuni[j].classList.remove("activ");
+      }
+    }
   }
 
   function arataEcran(nume) {
@@ -438,6 +462,50 @@
     }
   }
 
+  // Meniu limbă pe ecranul splash
+  function initSetariSplash() {
+    var btnSetari = document.getElementById("btn-splash-setari");
+    var meniuLimba = document.getElementById("meniu-limba-splash");
+    if (!btnSetari || !meniuLimba) {
+      return;
+    }
+
+    btnSetari.addEventListener("click", function (ev) {
+      ev.stopPropagation();
+      meniuLimba.classList.toggle("hidden");
+      var deschis = !meniuLimba.classList.contains("hidden");
+      btnSetari.setAttribute("aria-expanded", deschis ? "true" : "false");
+    });
+
+    document.addEventListener("click", function (ev) {
+      if (
+        meniuLimba.classList.contains("hidden") ||
+        btnSetari.contains(ev.target) ||
+        meniuLimba.contains(ev.target)
+      ) {
+        return;
+      }
+      meniuLimba.classList.add("hidden");
+      btnSetari.setAttribute("aria-expanded", "false");
+    });
+
+    var optiuni = meniuLimba.querySelectorAll(".opt-limba");
+    var k;
+    for (k = 0; k < optiuni.length; k++) {
+      optiuni[k].addEventListener("click", function () {
+        seteazaLimba(this.getAttribute("data-limba"));
+        meniuLimba.classList.add("hidden");
+        btnSetari.setAttribute("aria-expanded", "false");
+      });
+    }
+  }
+
+  function initIconiteLucide() {
+    if (typeof lucide !== "undefined" && lucide.createIcons) {
+      lucide.createIcons();
+    }
+  }
+
   function initEvenimente() {
     document.getElementById("btn-intro-start").addEventListener("click", function () {
       arataEcran("meniu");
@@ -452,9 +520,10 @@
     });
 
     document.getElementById("select-limba").addEventListener("change", function () {
-      limbaCurenta = this.value;
-      aplicaLimba();
+      seteazaLimba(this.value);
     });
+
+    initSetariSplash();
 
     var carduriNivel = document.querySelectorAll(".card-nivel");
     var n;
@@ -530,6 +599,7 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     initSpriteUri();
+    initIconiteLucide();
     initEvenimente();
     arataEcran("splash");
     aplicaLimba();

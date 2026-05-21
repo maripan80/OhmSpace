@@ -28,10 +28,175 @@ body {
     var(--fundal);
 }
 
+/* Make the splash section support a full-size background image */
+.ecran-splash {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle dark overlay so text remains readable over bright images */
+.ecran-splash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(3,7,18,0.45), rgba(3,7,18,0.25));
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure children are above the overlay */
+.ecran-splash > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Buton START — splash */
 .btn-start-mare {
-  padding: 1rem 3.5rem;
-  font-size: 1.1rem;
-  letter-spacing: 0.35em;
+  padding: 1.15rem 4rem;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  transition:
+    color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    text-shadow 0.35s ease,
+    background 0.35s ease;
+}
+
+.btn-start-mare:hover {
+  color: #67e8f9;
+  border-color: #67e8f9;
+  background: rgba(34, 211, 238, 0.1);
+  box-shadow:
+    0 0 20px rgba(34, 211, 238, 0.55),
+    0 0 40px rgba(34, 211, 238, 0.25);
+  text-shadow:
+    0 0 10px rgba(34, 211, 238, 0.95),
+    0 0 22px rgba(34, 211, 238, 0.55);
+}
+
+/* Nava — deplasată ușor în sus față de titlu */
+.splash-nava {
+  margin-bottom: 0.25rem;
+  transform: translateY(-1.25rem);
+}
+
+.splash-header {
+  margin-top: -0.5rem;
+}
+
+/* Setări splash — colț dreapta-sus */
+.splash-setari-wrap {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+}
+
+.btn-splash-setari {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  color: rgba(148, 163, 184, 0.75);
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.btn-splash-setari:hover,
+.btn-splash-setari[aria-expanded="true"] {
+  color: var(--cyan-neon);
+  border-color: rgba(34, 211, 238, 0.45);
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.2);
+}
+
+.icon-splash-setari {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.meniu-limba-splash {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  min-width: 9rem;
+  padding: 0.65rem 0.75rem;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.meniu-limba-titlu {
+  margin: 0 0 0.5rem;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+
+.meniu-limba-optiuni {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.opt-limba {
+  flex: 1;
+  padding: 0.35rem 0.5rem;
+  font-family: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.opt-limba:hover {
+  color: var(--cyan-neon);
+  border-color: rgba(34, 211, 238, 0.45);
+}
+
+.opt-limba.activ {
+  color: var(--cyan-neon);
+  border-color: var(--cyan-neon);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.25);
+}
+
+/* Credit InfoEducație — jos pe splash */
+.splash-credit {
+  position: absolute;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: rgba(148, 163, 184, 0.55);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .zona-atasament-splash .atasament-cadru {
