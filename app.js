@@ -1,19 +1,24 @@
 /**
- * OhmSpace — logică principală (navigare, limbi, manual, misiunea 1).
+ * OhmSpace — navigare, limbi, manuale, 5 misiuni, victorie, caiet desen.
  */
 
 (function () {
   "use strict";
 
-  var TENSIUNE = 24;
-  var REZISTOR_CORECT = 12;
-
   var limbaCurenta = "ro";
-  var paginaManualCurenta = 0;
-  var rezistentaMontata = null;
-  var etichetaMontata = "";
-  var misiuneReusita = false;
+  var piesaMontata = null;
+  var piesaSelectata = null;
+  var filtruInventar = "toate";
   var nivelSelectat = 1;
+  var nivelCurentMisiune = 1;
+
+  var progresNiveluri = { 1: false, 2: false, 3: false, 4: false, 5: false };
+  var rezistentaPotentiometru = 0;
+
+  var stareCarti = {
+    tehnic: { pagina: 0, deschis: false },
+    jurnal: { pagina: 0, deschis: false }
+  };
 
   var traduceri = {
     ro: {
@@ -27,12 +32,47 @@
       atasamentAvatarTitlu: "Atașament — Avatar OHM-7",
       atasamentManualTitlu: "Opțional: copertă manual — coperta-manual.jpg",
       titluNiveluri: "Selectează nivelul",
-      nivel1Titlu: "Misiunea 1 — Legea lui Ohm",
-      nivel1Desc: "Ventilator Sector Alpha · 24 V",
-      nivel2Titlu: "Misiunea 2 — Kirchhoff",
-      nivel3Titlu: "Misiunea 3 — Circuite mixte",
-      nivelBlocat: "În curând",
-      mesajNivelBlocat: "Acest nivel nu este disponibil încă.",
+      nivel1Titlu: "Misiunea 1 — Rezistor & ventilator",
+      nivel1Desc: "Sector Alpha · 12 Ω · 2 A",
+      nivel2Titlu: "Misiunea 2 — Tensiuni în serie",
+      nivel2Desc: "Sub-stație solară · 36 V",
+      nivel3Titlu: "Misiunea 3 — Diodă",
+      nivel3Desc: "Releu antenă · polarizare",
+      nivel4Titlu: "Misiunea 4 — Condensator",
+      nivel4Desc: "Laser apărare · 2 F",
+      nivel5Titlu: "Misiunea 5 — Potențiometru",
+      nivel5Desc: "Seră LED · 1,5 A · 8 Ω",
+      potentiometru: "Potențiometru",
+      labelPotentiometru: "Calibrare potențiometru",
+      rezistentaLivePrefix: "Rezistență curentă:",
+      nivelBlocat: "Blocat",
+      filtruToate: "Toate",
+      filtruPutere: "Putere",
+      filtruDiode: "Diode",
+      filtruCapacitor: "Condensatoare",
+      filtruRezistori: "Rezistori",
+      bat6: "Baterie 6V",
+      bat12: "Baterie 12V",
+      bat24: "Baterie 24V",
+      diodaF: "Diodă →",
+      diodaR: "Diodă ←",
+      cap05: "0.5 F",
+      cap2: "2.0 F",
+      cap10: "10 F",
+      rez2: "2 Ω",
+      rez12: "12 Ω",
+      rez50: "50 Ω",
+      hintDesen: "Desenează formule sau scheme.",
+      labelDiagramaCircuit: "Diagramă circuit (real)",
+      diagramaPlaceholder: "Adaugă o fotografie sau schemă IRL în folderul poze:",
+      titluVictorie: "Misiune reușită!",
+      victorieDetail: "OHM-7 — progres înregistrat.",
+      btnVictorieMeniu: "Meniu principal",
+      btnVictorieUrmator: "Următoarea misiune →",
+      btnVictorieCircuit: "Vezi circuitul rezolvat",
+      titluCircuitRezolvat: "Circuit rezolvat",
+      mesajNivelBlocat: "Nivel indisponibil.",
+      mesajSelecteazaPiesa: "Selectează o piesă din inventar.",
       btnPorneste: "Inițiază Misiunea",
       btnSetari: "Setări",
       titluSetari: "Setări",
@@ -47,32 +87,24 @@
       navJurnal: "Jurnal de Bord (Poveste)",
       navJurnalDesc: "Lore și fapte spațiale",
       labelProgres: "Progres misiuni:",
-      titluMisiune1: "Misiunea 1 — Legea lui Ohm pe Lună",
-      btnDeschideManual: "Deschide Manualul Tehnic",
+      btnDeschideManual: "Manual",
       btnInapoiMeniu: "← Meniu",
-      labelAi: "AI Baza — Unitatea OHM-7",
-      dialogMisiune1:
-        "ALERTĂ: Modulul de Oxigen din Sectorul Alpha s-a oprit din cauza prafului lunar (regolit). Tensiunea de la panoul solar este stabilă la 24V. Ventilatorul principal are nevoie de exact 2 Amperi pentru a reporni fără să scurtcircuiteze rețeaua. Calculează și plasează rezistorul potrivit din inventar!",
-      labelSchema: "Schema electronică — Sector Alpha",
-      labelBaterie: "Baterie",
-      slotGol: "[ SLOT GOL ]",
-      labelVentilator: "Ventilator",
-      hintMontare: "Trage rezistorul din inventar și plasează-l în slotul gol.",
-      labelInventar: "Inventar piese",
-      rez2: "Rezistor 2 Ω",
-      rez12: "Rezistor 12 Ω",
-      rez50: "Rezistor 50 Ω",
+      labelAi: "OHM-7",
+      slotGol: "[ SLOT ]",
+      labelInventar: "Inventar",
       btnLanseaza: "Lansează Curentul",
+      mesajFaraPiesa: "Montează o piesă în slot.",
       labelScratchpad: "Caiet de calcule",
       btnPagAnterioara: "Pagina precedentă",
       btnPagUrmatoare: "Pagina următoare",
       titluManual: "Manual Tehnic",
-      mesajSucces:
-        "SUCCES! Curent stabil: 2 A. Ventilatorul Sector Alpha repornește. Oxigenul revine la parametri normali.",
-      mesajSupracurent:
-        "ALERTĂ: Ventilatorul s-a supraîncălzit! Rezistență prea mică!",
-      mesajSubalimentare: "Curent insuficient pentru a porni motoarele.",
-      mesajFaraPiesa: "Montează un rezistor în slot înainte de a lansa curentul."
+      titluJurnal: "Jurnal de Bord",
+      labelGhidMeniu: "Consilier — OHM-7",
+      hudStatus: "Sistem online — Artemis-Prime",
+      ghidMeniu1: "Alege o misiune. Citește manualul pentru teorie.",
+      hintCoperta: "Apasă coperta pentru a deschide cartea",
+      btnDeschideCarte: "Deschide manualul",
+      btnDeschideJurnal: "Deschide jurnalul"
     },
     en: {
       atasamentSplashTitlu: "Attachment — Intro cover",
@@ -85,12 +117,47 @@
       atasamentAvatarTitlu: "Attachment — OHM-7 avatar",
       atasamentManualTitlu: "Optional: manual cover — coperta-manual.jpg",
       titluNiveluri: "Select level",
-      nivel1Titlu: "Mission 1 — Ohm's Law",
-      nivel1Desc: "Sector Alpha fan · 24 V",
-      nivel2Titlu: "Mission 2 — Kirchhoff",
-      nivel3Titlu: "Mission 3 — Mixed circuits",
-      nivelBlocat: "Coming soon",
-      mesajNivelBlocat: "This level is not available yet.",
+      nivel1Titlu: "Mission 1 — Resistor & fan",
+      nivel1Desc: "Sector Alpha · 12 Ω · 2 A",
+      nivel2Titlu: "Mission 2 — Series voltage",
+      nivel2Desc: "Solar substation · 36 V",
+      nivel3Titlu: "Mission 3 — Diode",
+      nivel3Desc: "Antenna relay · polarization",
+      nivel4Titlu: "Mission 4 — Capacitor",
+      nivel4Desc: "Defense laser · 2 F",
+      nivel5Titlu: "Mission 5 — Potentiometer",
+      nivel5Desc: "Greenhouse LED · 1.5 A · 8 Ω",
+      potentiometru: "Potentiometer",
+      labelPotentiometru: "Potentiometer calibration",
+      rezistentaLivePrefix: "Current resistance:",
+      nivelBlocat: "Locked",
+      filtruToate: "All",
+      filtruPutere: "Power",
+      filtruDiode: "Diodes",
+      filtruCapacitor: "Capacitors",
+      filtruRezistori: "Resistors",
+      bat6: "Battery 6V",
+      bat12: "Battery 12V",
+      bat24: "Battery 24V",
+      diodaF: "Diode →",
+      diodaR: "Diode ←",
+      cap05: "0.5 F",
+      cap2: "2.0 F",
+      cap10: "10 F",
+      rez2: "2 Ω",
+      rez12: "12 Ω",
+      rez50: "50 Ω",
+      hintDesen: "Draw formulas or schematics.",
+      labelDiagramaCircuit: "Real-world circuit diagram",
+      diagramaPlaceholder: "Add a photo or real schematic in the poze folder:",
+      titluVictorie: "Mission complete!",
+      victorieDetail: "OHM-7 — progress logged.",
+      btnVictorieMeniu: "Main menu",
+      btnVictorieUrmator: "Next mission →",
+      btnVictorieCircuit: "View solved circuit",
+      titluCircuitRezolvat: "Solved circuit",
+      mesajNivelBlocat: "Level unavailable.",
+      mesajSelecteazaPiesa: "Select a part from inventory.",
       btnPorneste: "Start Mission",
       btnSetari: "Settings",
       titluSetari: "Settings",
@@ -104,32 +171,25 @@
       navManualDesc: "Ohm's law, Kirchhoff",
       navJurnal: "Logbook (Story)",
       navJurnalDesc: "Lore and space facts",
-      labelProgres: "Mission progress:",
-      titluMisiune1: "Mission 1 — Ohm's Law on the Moon",
-      btnDeschideManual: "Open Technical Manual",
+      labelProgres: "Progress:",
+      btnDeschideManual: "Manual",
       btnInapoiMeniu: "← Menu",
-      labelAi: "Base AI — Unit OHM-7",
-      dialogMisiune1:
-        "ALERT: Oxygen Module in Sector Alpha stopped due to lunar dust (regolith). Solar panel voltage is stable at 24V. Main fan needs exactly 2 Amperes to restart without shorting the network. Calculate and place the correct resistor from inventory!",
-      labelSchema: "Electronic schematic — Sector Alpha",
-      labelBaterie: "Battery",
-      slotGol: "[ EMPTY SLOT ]",
-      labelVentilator: "Fan",
-      hintMontare: "Drag a resistor from inventory and drop it on the empty slot.",
-      labelInventar: "Parts inventory",
-      rez2: "Resistor 2 Ω",
-      rez12: "Resistor 12 Ω",
-      rez50: "Resistor 50 Ω",
+      labelAi: "OHM-7",
+      slotGol: "[ SLOT ]",
+      labelInventar: "Inventory",
       btnLanseaza: "Launch Current",
+      mesajFaraPiesa: "Place a part in the slot.",
       labelScratchpad: "Scratchpad",
       btnPagAnterioara: "Previous page",
       btnPagUrmatoare: "Next page",
       titluManual: "Technical Manual",
-      mesajSucces:
-        "SUCCESS! Stable current: 2 A. Sector Alpha fan restarts. Oxygen returns to normal.",
-      mesajSupracurent: "ALERT: Fan overheated! Resistance too low!",
-      mesajSubalimentare: "Insufficient current to start motors.",
-      mesajFaraPiesa: "Mount a resistor in the slot before launching current."
+      titluJurnal: "Logbook",
+      labelGhidMeniu: "Advisor — OHM-7",
+      hudStatus: "System online — Artemis-Prime",
+      ghidMeniu1: "Pick a mission. Read the manual for theory.",
+      hintCoperta: "Click the cover to open the book",
+      btnDeschideCarte: "Open manual",
+      btnDeschideJurnal: "Open logbook"
     }
   };
 
@@ -140,16 +200,15 @@
     misiune: document.getElementById("ecran-misiune")
   };
 
-  var overlayManual = document.getElementById("overlay-manual");
-  var paginaStanga = document.getElementById("pagina-stanga");
-  var paginaDreapta = document.getElementById("pagina-dreapta");
-  var indicatorPagini = document.getElementById("indicator-pagini");
-  var slotRezistor = document.getElementById("slot-rezistor");
+  var slotMisiune = document.getElementById("slot-misiune");
   var continutSlot = document.getElementById("continut-slot");
-  var textSlot = document.getElementById("text-slot");
+  var circuitTinta = document.getElementById("circuit-tinta");
   var mesajRezultat = document.getElementById("mesaj-rezultat");
-  var ventilatorPiesa = document.getElementById("ventilator-piesa");
   var indicatorProgres = document.getElementById("indicator-progres");
+  var overlayVictorie = document.getElementById("overlay-victorie");
+  var nivelVictorieCurent = 1;
+  var dialogAi = document.getElementById("dialog-ai");
+  var titluMisiuneCurenta = document.getElementById("titlu-misiune-curenta");
 
   function textTradus(cheie) {
     var dict = traduceri[limbaCurenta];
@@ -164,14 +223,9 @@
     container.innerHTML = componentSprites[cheie];
   }
 
-  // Randare sprite-uri la încărcare (schemă + inventar)
+  // Randare sprite-uri inventar
   function initSpriteUri() {
-    var baterie = document.querySelector('[data-sprite="baterie"]');
-    var vent = document.getElementById("container-ventilator");
-    puneSprite(baterie, "baterie");
-    puneSprite(vent, "ventilator");
-
-    var pieseInv = document.querySelectorAll(".piesa-inventar");
+    var pieseInv = document.querySelectorAll(".piesa-inventar[data-sprite]");
     var i;
     for (i = 0; i < pieseInv.length; i++) {
       var cheie = pieseInv[i].getAttribute("data-sprite");
@@ -180,6 +234,185 @@
         puneSprite(span, cheie);
       }
     }
+  }
+
+  function obtineMisiuni() {
+    return typeof misiuniOhmSpace !== "undefined" ? misiuniOhmSpace : [];
+  }
+
+  function obtineMisiuneDupaId(id) {
+    var lista = obtineMisiuni();
+    var i;
+    for (i = 0; i < lista.length; i++) {
+      if (lista[i].id === id) {
+        return lista[i];
+      }
+    }
+    return null;
+  }
+
+  function textMisiune(m, camp) {
+    if (!m || !m[camp]) {
+      return "";
+    }
+    var bloc = m[camp];
+    return bloc[limbaCurenta] || bloc.ro || "";
+  }
+
+  function textDiagrama(m, camp) {
+    if (!m || !m.diagrama || !m.diagrama[camp]) {
+      return "";
+    }
+    var bloc = m.diagrama[camp];
+    return bloc[limbaCurenta] || bloc.ro || "";
+  }
+
+  // Cale imagine circuit — în misiune vs. rezolvat
+  function caleCircuitMisiune(m, rezolvat) {
+    if (!m) {
+      return "";
+    }
+    if (m.circuit) {
+      return rezolvat ? m.circuit.rezolvat : m.circuit.inMission;
+    }
+    if (rezolvat && m.circuitRezolvat) {
+      return m.circuitRezolvat;
+    }
+    if (!rezolvat && m.irlImage) {
+      return m.irlImage;
+    }
+    if (m.diagrama && m.diagrama.src) {
+      return m.diagrama.src;
+    }
+    return "circuite/C" + m.id + (rezolvat ? "R" : "") + ".png";
+  }
+
+  // Afișare diagramă circuit sub schema simbolică
+  function actualizeazaDiagramaCircuit(m) {
+    var img = document.getElementById("img-diagrama-circuit");
+    var ph = document.getElementById("diagrama-circuit-placeholder");
+    var cap = document.getElementById("diagrama-circuit-caption");
+    var cale = document.getElementById("diagrama-placeholder-cale");
+    var msg = document.getElementById("diagrama-placeholder-text");
+    if (!img || !ph) {
+      return;
+    }
+    var src = caleCircuitMisiune(m, false);
+    if (!m || !src) {
+      img.classList.add("hidden");
+      ph.classList.remove("hidden");
+      if (cap) {
+        cap.textContent = "";
+      }
+      if (msg) {
+        msg.textContent = textTradus("diagramaPlaceholder");
+      }
+      if (cale) {
+        cale.textContent = "";
+      }
+      return;
+    }
+    if (cap) {
+      cap.textContent = textDiagrama(m, "caption");
+    }
+    if (msg) {
+      msg.textContent = textTradus("diagramaPlaceholder");
+    }
+    if (cale) {
+      cale.textContent = src;
+    }
+    img.alt = textDiagrama(m, "alt");
+    img.onload = function () {
+      img.classList.remove("hidden");
+      ph.classList.add("hidden");
+    };
+    img.onerror = function () {
+      img.classList.add("hidden");
+      ph.classList.remove("hidden");
+    };
+    img.classList.add("hidden");
+    ph.classList.remove("hidden");
+    img.src = src;
+  }
+
+  function textRezistentaLive(ohmi) {
+    return textTradus("rezistentaLivePrefix") + " " + ohmi + " Ω";
+  }
+
+  function obtineRezistentaPotentiometru() {
+    var slider = document.getElementById("potentiometer-slider");
+    if (slider) {
+      return parseInt(slider.value, 10) || 0;
+    }
+    return rezistentaPotentiometru;
+  }
+
+  // Panou slider — vizibil doar la misiunea potențiometru + piesă montată
+  function ascundePanouPotentiometru() {
+    var panou = document.getElementById("panou-potentiometru");
+    var slider = document.getElementById("potentiometer-slider");
+    if (panou) {
+      panou.classList.add("hidden");
+      panou.setAttribute("aria-hidden", "true");
+    }
+    if (slider) {
+      slider.value = "0";
+    }
+    rezistentaPotentiometru = 0;
+    actualizeazaAfisajRezistentaPot();
+    if (slotMisiune) {
+      slotMisiune.classList.remove("slot-potentiometru");
+    }
+  }
+
+  function actualizeazaAfisajRezistentaPot() {
+    var live = document.getElementById("potentiometru-valoare-live");
+    if (live) {
+      live.textContent = textRezistentaLive(obtineRezistentaPotentiometru());
+    }
+    if (piesaMontata && piesaMontata.tip === "potentiometer") {
+      piesaMontata.rezistentaReglata = obtineRezistentaPotentiometru();
+    }
+  }
+
+  function arataPanouPotentiometru() {
+    var panou = document.getElementById("panou-potentiometru");
+    var slider = document.getElementById("potentiometer-slider");
+    if (!panou || !slider) {
+      return;
+    }
+    panou.classList.remove("hidden");
+    panou.setAttribute("aria-hidden", "false");
+    slider.value = "0";
+    rezistentaPotentiometru = 0;
+    actualizeazaAfisajRezistentaPot();
+    if (slotMisiune) {
+      slotMisiune.classList.add("slot-potentiometru");
+    }
+  }
+
+  // Ascunde potențiometrul pe misiunile 1–4; pe M5 inventarul e complet
+  function aplicInventarPentruMisiune(m) {
+    var piese = document.querySelectorAll(".piesa-inventar");
+    var i;
+    var misiunePot = m && m.tip === "potentiometer";
+    for (i = 0; i < piese.length; i++) {
+      var tip = piese[i].getAttribute("data-tip");
+      var ascuns = tip === "potentiometer" && !misiunePot;
+      piese[i].classList.toggle("hidden-misiune", ascuns);
+    }
+    aplicFiltruInventar();
+  }
+
+  function textEroareMisiune(m, cheie) {
+    if (!m.erori) {
+      return "";
+    }
+    var bloc = m.erori[cheie] || m.erori.default;
+    if (!bloc) {
+      return "";
+    }
+    return bloc[limbaCurenta] || bloc.ro || "";
   }
 
   function aplicaLimba() {
@@ -193,13 +426,55 @@
       }
     }
     document.documentElement.lang = limbaCurenta === "en" ? "en" : "ro";
-    var titluModal = document.getElementById("titlu-manual-modal");
-    if (titluModal) {
-      titluModal.textContent = textTradus("titluManual");
-    }
     actualizeazaIndicatoareLimba();
     actualizeazaSlotVizual();
-    actualizeazaPaginaManual();
+    if (stareCarti.tehnic.deschis) {
+      randeazaPaginaCarte("tehnic");
+    }
+    if (stareCarti.jurnal.deschis) {
+      randeazaPaginaCarte("jurnal");
+    }
+    if (!document.getElementById("ecran-misiune").classList.contains("hidden")) {
+      var m = obtineMisiuneDupaId(nivelCurentMisiune);
+      if (m) {
+        titluMisiuneCurenta.textContent = textMisiune(m, "titlu");
+        dialogAi.textContent = textMisiune(m, "dialog");
+        actualizeazaDiagramaCircuit(m);
+        actualizeazaAfisajRezistentaPot();
+      }
+    }
+  }
+
+  // Returnează obiectul cu paginile pentru tipul de carte
+  function dateCarte(tip) {
+    if (tip === "jurnal") {
+      return typeof jurnalData !== "undefined" ? jurnalData : null;
+    }
+    return typeof manualTehnic !== "undefined" ? manualTehnic : null;
+  }
+
+  // Elemente DOM pentru o carte (tehnic sau jurnal)
+  function elementeCarte(tip) {
+    return {
+      overlay: document.getElementById(
+        tip === "jurnal" ? "overlay-jurnal" : "overlay-manual-tehnic"
+      ),
+      coperta: document.getElementById(
+        tip === "jurnal" ? "coperta-jurnal" : "coperta-manual-tehnic"
+      ),
+      interior: document.getElementById(
+        tip === "jurnal" ? "interior-jurnal" : "interior-manual-tehnic"
+      ),
+      stanga: document.getElementById(
+        tip === "jurnal" ? "pagina-stanga-jurnal" : "pagina-stanga-tehnic"
+      ),
+      dreapta: document.getElementById(
+        tip === "jurnal" ? "pagina-dreapta-jurnal" : "pagina-dreapta-tehnic"
+      ),
+      indicator: document.getElementById(
+        tip === "jurnal" ? "indicator-pagini-jurnal" : "indicator-pagini-tehnic"
+      )
+    };
   }
 
   // Sincronizează RO/EN între splash și meniul principal
@@ -254,198 +529,688 @@
   }
 
   function pornesteNivelSelectat() {
-    if (nivelSelectat === 1) {
-      arataEcran("misiune");
+    var card = document.querySelector(
+      '.card-nivel[data-nivel="' + nivelSelectat + '"]'
+    );
+    if (!card || card.getAttribute("data-disponibil") !== "1") {
       return;
     }
-    afiseazaMesaj("mesajNivelBlocat", "eroare-sub");
+    loadMission(nivelSelectat);
+    arataEcran("misiune");
   }
 
-  function deschideManual(paginaStart) {
+  // Randare dinamică circuit + texte misiune
+  function loadMission(id) {
+    var m = obtineMisiuneDupaId(id);
+    if (!m) {
+      return;
+    }
+    nivelCurentMisiune = id;
+    piesaMontata = null;
+    piesaSelectata = null;
+
+    titluMisiuneCurenta.textContent = textMisiune(m, "titlu");
+    dialogAi.textContent = textMisiune(m, "dialog");
+
+    puneSprite(document.getElementById("circuit-sursa-sprite"), m.sursa.sprite);
+    document.getElementById("circuit-sursa-val").textContent = m.sursa.valoareLabel;
+
+    puneSprite(document.getElementById("circuit-tinta-sprite"), m.tinta.sprite);
+    circuitTinta.className = "piesa-schema shrink-0 text-center px-2 py-2 " + m.tinta.clasaAnim;
+
+    var linieTinta = document.getElementById("linie-spre-tinta");
+    if (linieTinta) {
+      linieTinta.classList.toggle("linie-sageata", !!m.sageti);
+    }
+
+    ascundePanouPotentiometru();
+    curataSlot();
+    reseteazaRezultatVizual();
+    actualizeazaDiagramaCircuit(m);
+    actualizeazaSelectieInventar();
+    aplicInventarPentruMisiune(m);
+    if (m.tip === "potentiometer") {
+      seteazaFiltruInventar("toate");
+    }
+    curataCanvas();
+    redimensioneazaCanvasDesen();
+    if (typeof lucide !== "undefined" && lucide.createIcons) {
+      lucide.createIcons();
+    }
+  }
+
+  function incarcaNivelMisiune(n) {
+    loadMission(n);
+  }
+
+  function finalizeazaNivel(n) {
+    if (progresNiveluri[n]) {
+      return;
+    }
+    progresNiveluri[n] = true;
+    actualizeazaProgres();
+    actualizeazaCarduriNivel();
+    setTimeout(function () {
+      arataVictorie(n);
+    }, 900);
+  }
+
+  function arataVictorie(n) {
+    nivelVictorieCurent = n;
+    var subtitlu = document.getElementById("victorie-subtitlu");
+    var detail = document.getElementById("victorie-detail");
+    var m = obtineMisiuneDupaId(n);
+    subtitlu.textContent = m ? textMisiune(m, "victorieSub") : "";
+    detail.textContent = textTradus("victorieDetail");
+
+    var btnCircuit = document.getElementById("btn-victorie-circuit");
+    if (btnCircuit) {
+      btnCircuit.classList.toggle("hidden", !caleCircuitMisiune(m, true));
+    }
+
+    var btnUrmator = document.getElementById("btn-victorie-urmator");
+    if (n < 5) {
+      btnUrmator.classList.remove("hidden");
+      btnUrmator.setAttribute("data-urmator", String(n + 1));
+    } else {
+      btnUrmator.classList.add("hidden");
+    }
+
+    overlayVictorie.classList.remove("hidden");
+    overlayVictorie.setAttribute("aria-hidden", "false");
+  }
+
+  function ascundeVictorie() {
+    overlayVictorie.classList.add("hidden");
+    overlayVictorie.setAttribute("aria-hidden", "true");
+    ascundeCircuitRezolvat();
+  }
+
+  function ascundeCircuitRezolvat() {
+    var overlay = document.getElementById("overlay-circuit-rezolvat");
+    if (overlay) {
+      overlay.classList.add("hidden");
+      overlay.setAttribute("aria-hidden", "true");
+    }
+  }
+
+  // Overlay circuit rezolvat (imagine C#R.png)
+  function arataCircuitRezolvatVictorie() {
+    var m = obtineMisiuneDupaId(nivelVictorieCurent);
+    var src = caleCircuitMisiune(m, true);
+    var overlay = document.getElementById("overlay-circuit-rezolvat");
+    var img = document.getElementById("img-circuit-rezolvat");
+    var cap = document.getElementById("circuit-rezolvat-caption");
+    if (!overlay || !img || !src) {
+      return;
+    }
+    img.alt = textDiagrama(m, "alt");
+    if (cap) {
+      cap.textContent =
+        limbaCurenta === "en"
+          ? "Solved circuit — mission " + nivelVictorieCurent
+          : "Circuit rezolvat — misiunea " + nivelVictorieCurent;
+    }
+    img.src = src;
+    overlay.classList.remove("hidden");
+    overlay.setAttribute("aria-hidden", "false");
+  }
+
+  // Animație ventilator — misiunea 1
+  function pornesteVentilatorAnimatie() {
+    if (!circuitTinta) {
+      return;
+    }
+    circuitTinta.classList.add("activ");
+    var wrap = document.getElementById("circuit-tinta-sprite");
+    var svg = wrap ? wrap.querySelector("#svg-ventilator") : null;
+    if (svg) {
+      svg.classList.add("rotate-anim");
+    }
+  }
+
+  function opresteVentilatorAnimatie() {
+    if (circuitTinta) {
+      circuitTinta.classList.remove("activ");
+    }
+    var wrap = document.getElementById("circuit-tinta-sprite");
+    var svg = wrap ? wrap.querySelector("#svg-ventilator") : null;
+    if (svg) {
+      svg.classList.remove("rotate-anim");
+    }
+  }
+
+  function actualizeazaCarduriNivel() {
+    var carduri = document.querySelectorAll(".card-nivel");
+    var i;
+    for (i = 0; i < carduri.length; i++) {
+      var n = parseInt(carduri[i].getAttribute("data-nivel"), 10);
+      if (progresNiveluri[n]) {
+        carduri[i].classList.add("completat");
+      }
+    }
+  }
+
+  // Deschide overlay-ul — întâi coperta, apoi paginile
+  function deschideCarte(tip, paginaStart) {
+    var el = elementeCarte(tip);
+    if (!el.overlay) {
+      return;
+    }
     if (typeof paginaStart === "number") {
-      paginaManualCurenta = paginaStart;
+      stareCarti[tip].pagina = paginaStart;
     }
-    overlayManual.classList.remove("hidden");
-    overlayManual.setAttribute("aria-hidden", "false");
-    actualizeazaPaginaManual();
-    leagaLinkuriCuprins();
+    stareCarti[tip].deschis = false;
+
+    el.overlay.classList.remove("hidden");
+    el.overlay.setAttribute("aria-hidden", "false");
+    el.coperta.classList.remove("ascuns", "hidden");
+    el.interior.classList.add("hidden");
+    el.coperta.classList.remove("hidden");
   }
 
-  function inchideManual() {
-    overlayManual.classList.add("hidden");
-    overlayManual.setAttribute("aria-hidden", "true");
+  // După „întoarcerea” copertei — afișează paginile
+  function deschideInteriorCarte(tip) {
+    var el = elementeCarte(tip);
+    stareCarti[tip].deschis = true;
+
+    el.coperta.classList.add("ascuns");
+    setTimeout(function () {
+      el.coperta.classList.add("hidden");
+      el.interior.classList.remove("hidden");
+      randeazaPaginaCarte(tip);
+    }, 380);
   }
 
-  function actualizeazaPaginaManual() {
-    if (typeof manualData === "undefined") {
+  function inchideCarte(tip) {
+    var el = elementeCarte(tip);
+    if (!el.overlay) {
       return;
     }
-    var idx = paginaManualCurenta;
-    var pagina = manualData.pagini[idx];
+    stareCarti[tip].deschis = false;
+    stareCarti[tip].pagina = 0;
+
+    el.overlay.classList.add("hidden");
+    el.overlay.setAttribute("aria-hidden", "true");
+    el.coperta.classList.remove("ascuns", "hidden");
+    el.interior.classList.add("hidden");
+  }
+
+  function randeazaPaginaCarte(tip) {
+    var cartea = dateCarte(tip);
+    var el = elementeCarte(tip);
+    if (!cartea || !el.stanga) {
+      return;
+    }
+
+    var idx = stareCarti[tip].pagina;
+    var pagina = cartea.pagini[idx];
     if (!pagina) {
       return;
     }
 
-    paginaStanga.innerHTML =
+    el.stanga.innerHTML =
       "<h4>" + pagina.stanga.titlu + "</h4>" + pagina.stanga.html;
-    paginaDreapta.innerHTML =
+    el.dreapta.innerHTML =
       "<h4>" + pagina.dreapta.titlu + "</h4>" + pagina.dreapta.html;
 
-    indicatorPagini.textContent =
-      idx + 1 + " / " + manualData.totalPagini;
+    el.indicator.textContent = idx + 1 + " / " + cartea.totalPagini;
 
-    document.getElementById("btn-pagina-anterioara").disabled = idx <= 0;
-    document.getElementById("btn-pagina-urmatoare").disabled =
-      idx >= manualData.totalPagini - 1;
+    var btnsAnterioara = document.querySelectorAll(
+      '.btn-pag-anterioara[data-carte="' + tip + '"]'
+    );
+    var btnsUrmatoare = document.querySelectorAll(
+      '.btn-pag-urmatoare[data-carte="' + tip + '"]'
+    );
+    var i;
+    for (i = 0; i < btnsAnterioara.length; i++) {
+      btnsAnterioara[i].disabled = idx <= 0;
+    }
+    for (i = 0; i < btnsUrmatoare.length; i++) {
+      btnsUrmatoare[i].disabled = idx >= cartea.totalPagini - 1;
+    }
 
-    leagaLinkuriCuprins();
+    leagaLinkuriCuprins(tip, el.stanga);
   }
 
-  function leagaLinkuriCuprins() {
-    var linkuri = paginaStanga.querySelectorAll(".link-capitol");
+  // Linkuri din cuprinsul manualului tehnic
+  function leagaLinkuriCuprins(tip, containerStanga) {
+    if (tip !== "tehnic" || !containerStanga) {
+      return;
+    }
+    var linkuri = containerStanga.querySelectorAll(".link-capitol");
     var j;
     for (j = 0; j < linkuri.length; j++) {
       linkuri[j].onclick = function () {
         var tinta = parseInt(this.getAttribute("data-sari-la"), 10);
         if (!isNaN(tinta)) {
-          paginaManualCurenta = tinta;
-          actualizeazaPaginaManual();
+          stareCarti.tehnic.pagina = tinta;
+          randeazaPaginaCarte("tehnic");
         }
       };
     }
   }
 
+  function cloneazaPiesa(date) {
+    var copie = {
+      tip: date.tip,
+      val: date.val,
+      sprite: date.sprite,
+      orientare: date.orientare
+    };
+    if (date.tip === "potentiometer") {
+      copie.rezistentaReglata = typeof date.rezistentaReglata === "number" ? date.rezistentaReglata : 0;
+    }
+    return copie;
+  }
+
   function datePiesaDinElement(el) {
+    var tip = el.getAttribute("data-tip");
+    var valRaw = el.getAttribute("data-val") || el.getAttribute("data-rezistenta");
+    if (!tip) {
+      if (el.hasAttribute("data-rezistenta")) {
+        tip = "rezistor";
+      }
+    }
     return {
-      valoare: parseInt(el.getAttribute("data-rezistenta"), 10),
-      eticheta: el.getAttribute("data-label"),
-      sprite: el.getAttribute("data-sprite")
+      tip: tip,
+      val: valRaw && valRaw.indexOf && valRaw.indexOf(".") >= 0 ? parseFloat(valRaw) : parseInt(valRaw, 10),
+      sprite: el.getAttribute("data-sprite"),
+      orientare: el.getAttribute("data-orientare") || null
     };
   }
 
-  function monteazaPiesa(date) {
-    if (!date || isNaN(date.valoare)) {
+  function curataSlot() {
+    piesaMontata = null;
+    ascundePanouPotentiometru();
+    if (!continutSlot || !slotMisiune) {
       return;
     }
-    rezistentaMontata = date.valoare;
-    etichetaMontata = date.eticheta;
-    slotRezistor.classList.add("montat");
-    slotRezistor.classList.remove("pulse-anim", "slot-hover");
-    actualizeazaSlotVizual();
-    reseteazaRezultatVizual();
+    continutSlot.innerHTML =
+      '<span class="text-slot-label">' + textTradus("slotGol") + "</span>";
+    slotMisiune.classList.remove("montat", "slot-hover", "slot-ars");
+    slotMisiune.classList.add("pulse-anim");
   }
 
   function actualizeazaSlotVizual() {
-    if (!continutSlot) {
+    if (!continutSlot || !slotMisiune) {
       return;
     }
-    if (rezistentaMontata === null) {
-      continutSlot.innerHTML =
-        '<span id="text-slot" class="text-slot-label">' +
-        textTradus("slotGol") +
-        "</span>";
-      textSlot = document.getElementById("text-slot");
-      slotRezistor.classList.remove("montat");
-      slotRezistor.classList.add("pulse-anim");
+    if (!piesaMontata) {
+      curataSlot();
       return;
     }
-    var cheie = cheieRezistor(rezistentaMontata);
-    if (cheie) {
+    var cheie =
+      piesaMontata.sprite ||
+      (typeof cheieSpritePiesa === "function"
+        ? cheieSpritePiesa(piesaMontata.tip, piesaMontata.val, piesaMontata.orientare)
+        : null);
+    if (cheie && componentSprites[cheie]) {
       continutSlot.innerHTML = componentSprites[cheie];
+    }
+    slotMisiune.classList.add("montat");
+    slotMisiune.classList.remove("pulse-anim");
+  }
+
+  function monteazaPiesa(date) {
+    if (!date || !date.tip) {
+      return;
+    }
+    var m = obtineMisiuneDupaId(nivelCurentMisiune);
+    if (m && m.tip !== "potentiometer" && date.tip === "potentiometer") {
+      return;
+    }
+    piesaMontata = cloneazaPiesa(date);
+    slotMisiune.classList.remove("slot-hover", "slot-ars");
+    actualizeazaSlotVizual();
+    if (date.tip === "potentiometer") {
+      arataPanouPotentiometru();
+    } else {
+      ascundePanouPotentiometru();
+    }
+    reseteazaRezultatVizual();
+  }
+
+  function actualizeazaSelectieInventar() {
+    var piese = document.querySelectorAll(".piesa-inventar");
+    var i;
+    for (i = 0; i < piese.length; i++) {
+      piese[i].classList.remove("piesa-selectata");
+    }
+    if (!piesaSelectata) {
+      return;
+    }
+    for (i = 0; i < piese.length; i++) {
+      var d = datePiesaDinElement(piese[i]);
+      if (
+        d.tip === piesaSelectata.tip &&
+        d.val === piesaSelectata.val &&
+        d.orientare === piesaSelectata.orientare
+      ) {
+        piese[i].classList.add("piesa-selectata");
+      }
     }
   }
 
-  // Drag & drop — inventar → slot
-  function initDragDrop() {
+  // Filtrare inventar componente
+  function aplicFiltruInventar() {
     var piese = document.querySelectorAll(".piesa-inventar");
     var i;
+    for (i = 0; i < piese.length; i++) {
+      var cat = piese[i].getAttribute("data-categorie");
+      var vizibilCat = filtruInventar === "toate" || cat === filtruInventar;
+      var ascunsMisiune = piese[i].classList.contains("hidden-misiune");
+      piese[i].classList.toggle("hidden", !vizibilCat || ascunsMisiune);
+    }
+  }
+
+  function seteazaFiltruInventar(cod) {
+    filtruInventar = cod;
+    var btns = document.querySelectorAll(".filtru-inventar");
+    var i;
+    for (i = 0; i < btns.length; i++) {
+      btns[i].classList.toggle("activ", btns[i].getAttribute("data-filtru") === cod);
+    }
+    aplicFiltruInventar();
+  }
+
+  function selecteazaPiesaInventar(el) {
+    piesaSelectata = cloneazaPiesa(datePiesaDinElement(el));
+    actualizeazaSelectieInventar();
+    reseteazaRezultatVizual();
+    if (slotMisiune) {
+      slotMisiune.classList.add("slot-tinta");
+    }
+  }
+
+  function monteazaInSlot() {
+    if (!piesaSelectata) {
+      if (piesaMontata) {
+        curataSlot();
+        reseteazaRezultatVizual();
+      } else {
+        afiseazaMesajDirect(textTradus("mesajSelecteazaPiesa"), "eroare-sub");
+      }
+      return;
+    }
+    monteazaPiesa(piesaSelectata);
+    if (slotMisiune) {
+      slotMisiune.classList.remove("slot-tinta");
+    }
+  }
+
+  // Drag & drop inventar → slot
+  function initDragDropInventar() {
+    var piese = document.querySelectorAll(".piesa-inventar");
+    var i;
+    var tipDate = "application/ohmspace-piesa";
 
     for (i = 0; i < piese.length; i++) {
+      piese[i].setAttribute("draggable", "true");
+
       piese[i].addEventListener("dragstart", function (ev) {
         var date = datePiesaDinElement(this);
-        ev.dataTransfer.setData(
-          "application/ohmspace-piesa",
-          JSON.stringify(date)
-        );
+        ev.dataTransfer.setData(tipDate, JSON.stringify(date));
         ev.dataTransfer.effectAllowed = "move";
         this.classList.add("trage-piesa");
+        piesaSelectata = cloneazaPiesa(date);
+        actualizeazaSelectieInventar();
       });
 
       piese[i].addEventListener("dragend", function () {
         this.classList.remove("trage-piesa");
-        slotRezistor.classList.remove("slot-hover");
+      });
+
+      piese[i].addEventListener("click", function (ev) {
+        ev.preventDefault();
+        selecteazaPiesaInventar(this);
       });
     }
 
-    slotRezistor.addEventListener("dragover", function (ev) {
+    if (!slotMisiune) {
+      return;
+    }
+
+    slotMisiune.addEventListener("dragover", function (ev) {
       ev.preventDefault();
       ev.dataTransfer.dropEffect = "move";
-      slotRezistor.classList.add("slot-hover");
+      slotMisiune.classList.add("slot-hover", "slot-tinta");
     });
 
-    slotRezistor.addEventListener("dragleave", function (ev) {
-      if (!slotRezistor.contains(ev.relatedTarget)) {
-        slotRezistor.classList.remove("slot-hover");
+    slotMisiune.addEventListener("dragleave", function () {
+      slotMisiune.classList.remove("slot-hover");
+      if (!piesaSelectata) {
+        slotMisiune.classList.remove("slot-tinta");
       }
     });
 
-    slotRezistor.addEventListener("drop", function (ev) {
+    slotMisiune.addEventListener("drop", function (ev) {
       ev.preventDefault();
-      slotRezistor.classList.remove("slot-hover");
-      var raw = ev.dataTransfer.getData("application/ohmspace-piesa");
+      slotMisiune.classList.remove("slot-hover", "slot-tinta");
+      var raw = ev.dataTransfer.getData(tipDate);
       if (!raw) {
         return;
       }
       try {
         monteazaPiesa(JSON.parse(raw));
       } catch (err) {
-        /* date invalide la drop */
+        return;
       }
+      piesaSelectata = null;
+      actualizeazaSelectieInventar();
     });
   }
 
-  function obtineSvgVentilator() {
-    return document.getElementById("svg-ventilator");
+  function initMontajCircuit() {
+    var filtre = document.querySelectorAll(".filtru-inventar");
+    var i;
+
+    initDragDropInventar();
+
+    if (slotMisiune) {
+      slotMisiune.addEventListener("click", monteazaInSlot);
+      slotMisiune.addEventListener("mouseenter", function () {
+        if (piesaSelectata) {
+          slotMisiune.classList.add("slot-hover");
+        }
+      });
+      slotMisiune.addEventListener("mouseleave", function () {
+        slotMisiune.classList.remove("slot-hover");
+      });
+    }
+
+    for (i = 0; i < filtre.length; i++) {
+      filtre[i].addEventListener("click", function () {
+        seteazaFiltruInventar(this.getAttribute("data-filtru"));
+      });
+    }
+
+    var sliderPot = document.getElementById("potentiometer-slider");
+    if (sliderPot) {
+      sliderPot.addEventListener("input", function () {
+        rezistentaPotentiometru = parseInt(sliderPot.value, 10) || 0;
+        actualizeazaAfisajRezistentaPot();
+        reseteazaRezultatVizual();
+      });
+    }
   }
 
   function reseteazaRezultatVizual() {
     mesajRezultat.className = "mesaj-rezultat text-sm hidden";
     mesajRezultat.textContent = "";
-    ventilatorPiesa.classList.remove("activ");
-    var svg = obtineSvgVentilator();
-    if (svg) {
-      svg.classList.remove("rotate-anim");
+    if (circuitTinta) {
+      circuitTinta.classList.remove("activ", "defect", "flash-laser");
+    }
+    var grid = document.getElementById("svg-grid");
+    if (grid) {
+      grid.classList.remove("grid-activ");
+    }
+    var laser = document.getElementById("svg-laser");
+    if (laser) {
+      laser.classList.remove("laser-activ");
+    }
+    opresteVentilatorAnimatie();
+    if (circuitTinta) {
+      circuitTinta.classList.remove("tinta-sera-led");
+    }
+    var seraLed = document.getElementById("svg-sera-led");
+    if (seraLed) {
+      seraLed.classList.remove("sera-led-activ");
     }
   }
 
+  function afiseazaMesajDirect(text, clasaCss) {
+    mesajRezultat.textContent = text;
+    mesajRezultat.className = "mesaj-rezultat text-sm " + clasaCss;
+    mesajRezultat.classList.remove("hidden");
+  }
+
+  // Validare tensiune in serie — Misiunea 2
+  function verificaSerie(m) {
+    if (!piesaMontata || piesaMontata.tip !== "baterie") {
+      afiseazaMesajDirect(textEroareMisiune(m, "default"), "eroare-sub");
+      return;
+    }
+    var total = m.sursaV + piesaMontata.val;
+    if (total === m.tintaV) {
+      circuitTinta.classList.add("activ");
+      var gridSvg = document.getElementById("svg-grid");
+      if (gridSvg) {
+        gridSvg.classList.add("grid-activ");
+      }
+      afiseazaMesajDirect(textMisiune(m, "mesajSucces"), "succes");
+      finalizeazaNivel(m.id);
+      return;
+    }
+    if (piesaMontata.val === 24) {
+      afiseazaMesajDirect(textEroareMisiune(m, "24"), "eroare-supra");
+      return;
+    }
+    if (piesaMontata.val === 6) {
+      afiseazaMesajDirect(textEroareMisiune(m, "6"), "eroare-sub");
+      return;
+    }
+    afiseazaMesajDirect(textEroareMisiune(m, "default"), "eroare-sub");
+  }
+
+  // Validare polarizare diodă — Misiunea 3
+  function verificaDioda(m) {
+    if (!piesaMontata || piesaMontata.tip !== "dioda") {
+      afiseazaMesajDirect(textEroareMisiune(m, "default"), "eroare-sub");
+      return;
+    }
+    if (piesaMontata.orientare === m.valCorect) {
+      circuitTinta.classList.add("activ");
+      afiseazaMesajDirect(textMisiune(m, "mesajSucces"), "succes");
+      finalizeazaNivel(m.id);
+      return;
+    }
+    afiseazaMesajDirect(textEroareMisiune(m, "stanga"), "eroare-sub");
+  }
+
+  // Validare capacitate — Misiunea 4
+  function verificaCapacitor(m) {
+    if (!piesaMontata || piesaMontata.tip !== "capacitor") {
+      afiseazaMesajDirect(textEroareMisiune(m, "default"), "eroare-sub");
+      return;
+    }
+    if (piesaMontata.val === m.valCorect) {
+      circuitTinta.classList.add("activ", "flash-laser");
+      var laserSvg = document.getElementById("svg-laser");
+      if (laserSvg) {
+        laserSvg.classList.add("laser-activ");
+      }
+      afiseazaMesajDirect(textMisiune(m, "mesajSucces"), "succes");
+      finalizeazaNivel(m.id);
+      return;
+    }
+    if (piesaMontata.val === 0.5) {
+      afiseazaMesajDirect(textEroareMisiune(m, "0.5"), "eroare-sub");
+      return;
+    }
+    if (piesaMontata.val === 10) {
+      afiseazaMesajDirect(textEroareMisiune(m, "10"), "eroare-supra");
+      return;
+    }
+    afiseazaMesajDirect(textEroareMisiune(m, "default"), "eroare-sub");
+  }
+
+  // Validare rezistor — Misiunea 1
+  function verificaRezistor(m) {
+    if (!piesaMontata || piesaMontata.tip !== "rezistor") {
+      afiseazaMesajDirect(textEroareMisiune(m, "default"), "eroare-sub");
+      return;
+    }
+    if (piesaMontata.val === m.valCorect) {
+      pornesteVentilatorAnimatie();
+      afiseazaMesajDirect(textMisiune(m, "mesajSucces"), "succes");
+      finalizeazaNivel(m.id);
+      return;
+    }
+    if (piesaMontata.val === 2) {
+      afiseazaMesajDirect(textEroareMisiune(m, "2"), "eroare-supra");
+      return;
+    }
+    if (piesaMontata.val === 50) {
+      afiseazaMesajDirect(textEroareMisiune(m, "50"), "eroare-sub");
+      return;
+    }
+    afiseazaMesajDirect(textEroareMisiune(m, "default"), "eroare-sub");
+  }
+
+  // Validare potențiometru — Misiunea 5
+  function verificaPotentiometru(m) {
+    if (!piesaMontata || piesaMontata.tip !== "potentiometer") {
+      afiseazaMesajDirect(textEroareMisiune(m, "default"), "eroare-sub");
+      return;
+    }
+    var r = obtineRezistentaPotentiometru();
+    if (r === 0) {
+      afiseazaMesajDirect(textEroareMisiune(m, "0"), "eroare-supra");
+      return;
+    }
+    if (r === m.valCorect) {
+      circuitTinta.classList.add("activ", "tinta-sera-led");
+      var ledSvg = document.getElementById("svg-sera-led");
+      if (ledSvg) {
+        ledSvg.classList.add("sera-led-activ");
+      }
+      afiseazaMesajDirect(textMisiune(m, "mesajSucces"), "succes");
+      finalizeazaNivel(m.id);
+      return;
+    }
+    if (r === 2) {
+      afiseazaMesajDirect(textEroareMisiune(m, "2"), "eroare-supra");
+      return;
+    }
+    if (r === 12) {
+      afiseazaMesajDirect(textEroareMisiune(m, "12"), "eroare-sub");
+      return;
+    }
+    afiseazaMesajDirect(textEroareMisiune(m, "default"), "eroare-sub");
+  }
+
   function lanseazaCurent() {
-    if (rezistentaMontata === null) {
+    var m = obtineMisiuneDupaId(nivelCurentMisiune);
+    if (!m) {
+      return;
+    }
+    if (!piesaMontata) {
       afiseazaMesaj("mesajFaraPiesa", "eroare-sub");
       return;
     }
-
     reseteazaRezultatVizual();
-
-    if (rezistentaMontata === REZISTOR_CORECT) {
-      ventilatorPiesa.classList.add("activ");
-      var svg = obtineSvgVentilator();
-      if (svg) {
-        svg.classList.add("rotate-anim");
-      }
-      afiseazaMesaj("mesajSucces", "succes");
-      if (!misiuneReusita) {
-        misiuneReusita = true;
-        actualizeazaProgres();
-      }
-      return;
+    if (m.tip === "serie") {
+      verificaSerie(m);
+    } else if (m.tip === "dioda") {
+      verificaDioda(m);
+    } else if (m.tip === "capacitor") {
+      verificaCapacitor(m);
+    } else if (m.tip === "rezistor") {
+      verificaRezistor(m);
+    } else if (m.tip === "potentiometer") {
+      verificaPotentiometru(m);
     }
-
-    if (rezistentaMontata < REZISTOR_CORECT) {
-      afiseazaMesaj("mesajSupracurent", "eroare-supra");
-      return;
-    }
-
-    afiseazaMesaj("mesajSubalimentare", "eroare-sub");
   }
 
   function afiseazaMesaj(cheieTraducere, clasaCss) {
@@ -455,11 +1220,170 @@
   }
 
   function actualizeazaProgres() {
-    var completate = misiuneReusita ? 1 : 0;
-    indicatorProgres.textContent = completate + " / 1";
-    if (misiuneReusita) {
+    var completate = 0;
+    if (progresNiveluri[1]) {
+      completate++;
+    }
+    if (progresNiveluri[2]) {
+      completate++;
+    }
+    if (progresNiveluri[3]) {
+      completate++;
+    }
+    if (progresNiveluri[4]) {
+      completate++;
+    }
+    if (progresNiveluri[5]) {
+      completate++;
+    }
+    indicatorProgres.textContent = completate + " / 5";
+    if (completate > 0) {
       indicatorProgres.classList.add("text-verde-neon");
     }
+  }
+
+  // Caiet desen — canvas (mouse + touch)
+  var ctxDesen;
+  var canvasDesen;
+  var deseneazaActiv = false;
+  var modDesen = "pen";
+  var ultimX = 0;
+  var ultimY = 0;
+
+  function redimensioneazaCanvasDesen() {
+    if (!canvasDesen) {
+      return;
+    }
+    var wrap = canvasDesen.parentElement;
+    var rect = wrap.getBoundingClientRect();
+    var w = Math.floor(rect.width) || 280;
+    var h = Math.floor(rect.height) || 200;
+    if (w < 10) {
+      w = 280;
+    }
+    if (h < 10) {
+      h = 200;
+    }
+    canvasDesen.width = w;
+    canvasDesen.height = h;
+    umpleCanvasFundal();
+    aplicCtxDesen();
+  }
+
+  // Fundal negru-albăstrui caiet desen
+  function umpleCanvasFundal() {
+    if (!ctxDesen || !canvasDesen) {
+      return;
+    }
+    ctxDesen.globalCompositeOperation = "source-over";
+    ctxDesen.shadowBlur = 0;
+    ctxDesen.fillStyle = "#0c1222";
+    ctxDesen.fillRect(0, 0, canvasDesen.width, canvasDesen.height);
+  }
+
+  // Reaplică culoarea instrumentului (width/height resetează contextul canvas)
+  function aplicCtxDesen() {
+    if (!ctxDesen || !canvasDesen) {
+      return;
+    }
+    ctxDesen.lineCap = "round";
+    ctxDesen.lineJoin = "round";
+    if (modDesen === "pen") {
+      ctxDesen.globalCompositeOperation = "source-over";
+      ctxDesen.strokeStyle = "#ffffff";
+      ctxDesen.shadowBlur = 0;
+      ctxDesen.lineWidth = 2;
+      canvasDesen.style.cursor = "crosshair";
+    } else {
+      ctxDesen.globalCompositeOperation = "destination-out";
+      ctxDesen.lineWidth = 14;
+      canvasDesen.style.cursor = "cell";
+    }
+  }
+
+  function pozitiePeCanvas(ev) {
+    var rect = canvasDesen.getBoundingClientRect();
+    var clientX = ev.clientX;
+    var clientY = ev.clientY;
+    if (ev.touches && ev.touches.length) {
+      clientX = ev.touches[0].clientX;
+      clientY = ev.touches[0].clientY;
+    }
+    return {
+      x: ((clientX - rect.left) / rect.width) * canvasDesen.width,
+      y: ((clientY - rect.top) / rect.height) * canvasDesen.height
+    };
+  }
+
+  function incepeDesen(ev) {
+    ev.preventDefault();
+    aplicCtxDesen();
+    deseneazaActiv = true;
+    var p = pozitiePeCanvas(ev);
+    ultimX = p.x;
+    ultimY = p.y;
+    ctxDesen.beginPath();
+    ctxDesen.moveTo(ultimX, ultimY);
+  }
+
+  function continuaDesen(ev) {
+    if (!deseneazaActiv) {
+      return;
+    }
+    ev.preventDefault();
+    var p = pozitiePeCanvas(ev);
+    ctxDesen.lineTo(p.x, p.y);
+    ctxDesen.stroke();
+    ultimX = p.x;
+    ultimY = p.y;
+  }
+
+  function opresteDesen() {
+    deseneazaActiv = false;
+  }
+
+  function seteazaModDesen(mod) {
+    modDesen = mod;
+    document.getElementById("btn-pen").classList.toggle("activ", mod === "pen");
+    document.getElementById("btn-radiera").classList.toggle("activ", mod === "radiera");
+    document.getElementById("btn-pen").setAttribute("aria-pressed", mod === "pen");
+    document.getElementById("btn-radiera").setAttribute("aria-pressed", mod === "radiera");
+    aplicCtxDesen();
+  }
+
+  function curataCanvas() {
+    umpleCanvasFundal();
+    aplicCtxDesen();
+  }
+
+  function initScratchpadDesen() {
+    canvasDesen = document.getElementById("scratchpad-canvas");
+    if (!canvasDesen) {
+      return;
+    }
+    ctxDesen = canvasDesen.getContext("2d");
+    ctxDesen.lineCap = "round";
+    ctxDesen.lineJoin = "round";
+    seteazaModDesen("pen");
+
+    canvasDesen.addEventListener("mousedown", incepeDesen);
+    canvasDesen.addEventListener("mousemove", continuaDesen);
+    canvasDesen.addEventListener("mouseup", opresteDesen);
+    canvasDesen.addEventListener("mouseleave", opresteDesen);
+    canvasDesen.addEventListener("touchstart", incepeDesen, { passive: false });
+    canvasDesen.addEventListener("touchmove", continuaDesen, { passive: false });
+    canvasDesen.addEventListener("touchend", opresteDesen);
+
+    document.getElementById("btn-pen").addEventListener("click", function () {
+      seteazaModDesen("pen");
+    });
+    document.getElementById("btn-radiera").addEventListener("click", function () {
+      seteazaModDesen("radiera");
+    });
+    document.getElementById("btn-curata-desen").addEventListener("click", curataCanvas);
+
+    window.addEventListener("resize", redimensioneazaCanvasDesen);
+    setTimeout(redimensioneazaCanvasDesen, 100);
   }
 
   // Meniu limbă pe ecranul splash
@@ -502,7 +1426,76 @@
 
   function initIconiteLucide() {
     if (typeof lucide !== "undefined" && lucide.createIcons) {
-      lucide.createIcons();
+      lucide.createIcons({ attrs: { "stroke-width": 1.75 } });
+    }
+  }
+
+  // Butoane copertă, pagini și închidere — ambele cărți
+  function initEvenimenteCarti() {
+    var tipuri = ["tehnic", "jurnal"];
+    var t;
+
+    document.getElementById("btn-deschide-tehnic").addEventListener("click", function () {
+      deschideInteriorCarte("tehnic");
+    });
+    document.getElementById("btn-deschide-jurnal").addEventListener("click", function () {
+      deschideInteriorCarte("jurnal");
+    });
+
+    var coperte = document.querySelectorAll(".coperta-figura");
+    var c;
+    for (c = 0; c < coperte.length; c++) {
+      coperte[c].addEventListener("click", function () {
+        var wrap = this.closest(".carte-wrap");
+        if (wrap.classList.contains("carte-jurnal")) {
+          deschideInteriorCarte("jurnal");
+        } else {
+          deschideInteriorCarte("tehnic");
+        }
+      });
+    }
+
+    var btnsInchide = document.querySelectorAll(".btn-inchide-carte");
+    for (t = 0; t < btnsInchide.length; t++) {
+      btnsInchide[t].addEventListener("click", function () {
+        inchideCarte(this.getAttribute("data-carte"));
+      });
+    }
+
+    var overlays = document.querySelectorAll(".overlay-carte");
+    for (t = 0; t < overlays.length; t++) {
+      overlays[t].addEventListener("click", function (ev) {
+        if (ev.target === this) {
+          if (this.id === "overlay-jurnal") {
+            inchideCarte("jurnal");
+          } else {
+            inchideCarte("tehnic");
+          }
+        }
+      });
+    }
+
+    var btnsAnterioara = document.querySelectorAll(".btn-pag-anterioara");
+    for (t = 0; t < btnsAnterioara.length; t++) {
+      btnsAnterioara[t].addEventListener("click", function () {
+        var tip = this.getAttribute("data-carte");
+        if (stareCarti[tip].pagina > 0) {
+          stareCarti[tip].pagina--;
+          randeazaPaginaCarte(tip);
+        }
+      });
+    }
+
+    var btnsUrmatoare = document.querySelectorAll(".btn-pag-urmatoare");
+    for (t = 0; t < btnsUrmatoare.length; t++) {
+      btnsUrmatoare[t].addEventListener("click", function () {
+        var tip = this.getAttribute("data-carte");
+        var cartea = dateCarte(tip);
+        if (cartea && stareCarti[tip].pagina < cartea.totalPagini - 1) {
+          stareCarti[tip].pagina++;
+          randeazaPaginaCarte(tip);
+        }
+      });
     }
   }
 
@@ -534,13 +1527,11 @@
     }
 
     document.getElementById("btn-start-manual").addEventListener("click", function () {
-      paginaManualCurenta = 0;
-      deschideManual(0);
+      deschideCarte("tehnic", 0);
     });
 
     document.getElementById("btn-start-jurnal").addEventListener("click", function () {
-      paginaManualCurenta = 3;
-      deschideManual(3);
+      deschideCarte("jurnal", 0);
     });
 
     document.getElementById("btn-hub-inapoi").addEventListener("click", function () {
@@ -548,18 +1539,19 @@
     });
 
     document.getElementById("btn-nav-misiuni").addEventListener("click", function () {
-      nivelSelectat = 1;
+      if (!nivelSelectat || nivelSelectat < 1) {
+        nivelSelectat = 1;
+      }
+      loadMission(nivelSelectat);
       arataEcran("misiune");
     });
 
     document.getElementById("btn-nav-manual").addEventListener("click", function () {
-      paginaManualCurenta = 0;
-      deschideManual(0);
+      deschideCarte("tehnic", 0);
     });
 
     document.getElementById("btn-nav-jurnal").addEventListener("click", function () {
-      paginaManualCurenta = 3;
-      deschideManual(3);
+      deschideCarte("jurnal", 0);
     });
 
     document.getElementById("btn-misiune-inapoi").addEventListener("click", function () {
@@ -567,34 +1559,53 @@
     });
 
     document.getElementById("btn-manual-din-joc").addEventListener("click", function () {
-      deschideManual(paginaManualCurenta);
+      deschideCarte("tehnic", stareCarti.tehnic.pagina);
     });
 
-    document.getElementById("btn-inchide-manual").addEventListener("click", inchideManual);
-
-    overlayManual.addEventListener("click", function (ev) {
-      if (ev.target === overlayManual) {
-        inchideManual();
-      }
-    });
-
-    document.getElementById("btn-pagina-anterioara").addEventListener("click", function () {
-      if (paginaManualCurenta > 0) {
-        paginaManualCurenta--;
-        actualizeazaPaginaManual();
-      }
-    });
-
-    document.getElementById("btn-pagina-urmatoare").addEventListener("click", function () {
-      if (paginaManualCurenta < manualData.totalPagini - 1) {
-        paginaManualCurenta++;
-        actualizeazaPaginaManual();
-      }
-    });
+    initEvenimenteCarti();
 
     document.getElementById("btn-lanseaza-curent").addEventListener("click", lanseazaCurent);
 
-    initDragDrop();
+    document.getElementById("btn-victorie-circuit").addEventListener("click", function () {
+      arataCircuitRezolvatVictorie();
+    });
+
+    document.getElementById("btn-inchide-circuit-rezolvat").addEventListener("click", function () {
+      ascundeCircuitRezolvat();
+    });
+
+    var overlayCircuitRez = document.getElementById("overlay-circuit-rezolvat");
+    if (overlayCircuitRez) {
+      overlayCircuitRez.addEventListener("click", function (ev) {
+        if (ev.target === overlayCircuitRez) {
+          ascundeCircuitRezolvat();
+        }
+      });
+    }
+
+    document.getElementById("btn-victorie-meniu").addEventListener("click", function () {
+      ascundeVictorie();
+      arataEcran("meniu");
+    });
+
+    document.getElementById("btn-victorie-urmator").addEventListener("click", function () {
+      var urm = parseInt(this.getAttribute("data-urmator"), 10);
+      ascundeVictorie();
+      nivelSelectat = urm;
+      var carduri = document.querySelectorAll(".card-nivel");
+      var c;
+      for (c = 0; c < carduri.length; c++) {
+        carduri[c].classList.remove("activ");
+        if (parseInt(carduri[c].getAttribute("data-nivel"), 10) === urm) {
+          carduri[c].classList.add("activ");
+        }
+      }
+      incarcaNivelMisiune(urm);
+      arataEcran("misiune");
+    });
+
+    initMontajCircuit();
+    initScratchpadDesen();
   }
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -604,5 +1615,7 @@
     arataEcran("splash");
     aplicaLimba();
     actualizeazaProgres();
+    actualizeazaCarduriNivel();
+    loadMission(1);
   });
 })();

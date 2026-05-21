@@ -1,60 +1,358 @@
 /**
- * OhmSpace — baza de date a manualului tehnic și a jurnalului.
- * Conținut HTML pe pagini, încărcat dinamic în app.js.
+ * OhmSpace — date centrale: i18n, misiuni, inventar, cărți.
  */
 
-var manualData = {
-  titlu: "Manual Tehnic — Artemis-Prime",
-  totalPagini: 4,
+var translations = {
+  ro: {
+    splashSubtitlu: "Baza Lunară Artemis-Prime",
+    btnStart: "START",
+    subtitluStart: "Simulare educațională — Fizică & Electronică",
+    hudStatus: "Sistem online — Artemis-Prime",
+    labelGhidMeniu: "Consilier — OHM-7",
+    ghidMeniu1: "Alege o misiune. Citește manualul pentru teorie.",
+    titluNiveluri: "Selectează nivelul",
+    btnPorneste: "Inițiază Misiunea",
+    navManual: "Manual Tehnic (Teorie)",
+    navJurnal: "Jurnal de Bord (Poveste)",
+    btnSetari: "Setări",
+    titluSetari: "Setări",
+    labelLimba: "Limba interfeței",
+    titluHub: "Panou de Comandă — Baza Artemis-Prime",
+    subtitluHub: "Selectează modulul de lucru",
+    btnInapoi: "← Meniu principal",
+    navMisiuni: "Sistem de Misiuni",
+    navMisiuniDesc: "Rezolvă probleme de circuit pe Lună",
+    navManualDesc: "Legea lui Ohm, componente",
+    navJurnalDesc: "Lore și fapte spațiale",
+    labelProgres: "Progres misiuni:",
+    btnDeschideManual: "Manual",
+    btnInapoiMeniu: "← Meniu",
+    labelAi: "OHM-7",
+    slotGol: "[ SLOT ]",
+    labelInventar: "Inventar",
+    filtruToate: "Toate",
+    filtruPutere: "Putere",
+    filtruDiode: "Diode",
+    filtruCapacitor: "Condensatoare",
+    filtruRezistori: "Rezistori",
+    bat6: "6 V", bat12: "12 V", bat24: "24 V",
+    diodaF: "Diodă →", diodaR: "Diodă ←",
+    cap05: "0.5 F", cap2: "2.0 F", cap10: "10 F",
+    rez2: "2 Ω", rez12: "12 Ω", rez50: "50 Ω",
+    potentiometru: "Potențiometru",
+    btnLanseaza: "Lansează Curentul",
+    labelScratchpad: "Caiet de calcule",
+    hintDesen: "Desenează formule sau scheme.",
+    labelDiagramaCircuit: "Diagramă circuit",
+    labelPotentiometru: "Calibrare potențiometru",
+    rezistentaLivePrefix: "Rezistență curentă:",
+    mesajFaraPiesa: "Montează o piesă în slot.",
+    mesajSelecteazaPiesa: "Selectează o piesă din inventar.",
+    titluVictorie: "Misiune reușită!",
+    victorieDetail: "OHM-7 — progres înregistrat.",
+    btnVictorieMeniu: "Meniu principal",
+    btnVictorieUrmator: "Următoarea misiune →",
+    btnVictorieCircuit: "Vezi circuitul rezolvat",
+    titluCircuitRezolvat: "Circuit rezolvat",
+    titluManual: "Manual Tehnic",
+    titluJurnal: "Jurnal de Bord",
+    hintCoperta: "Apasă coperta pentru a deschide cartea",
+    btnDeschideCarte: "Deschide manualul",
+    btnDeschideJurnal: "Deschide jurnalul",
+    btnPagAnterioara: "Pagina precedentă",
+    btnPagUrmatoare: "Pagina următoare",
+    diagramaPlaceholder: "Adaugă imaginea în:",
+    errPiesa: "Montează componenta corectă pentru această misiune."
+  },
+  en: {
+    splashSubtitlu: "Artemis-Prime Lunar Base",
+    btnStart: "START",
+    subtitluStart: "Educational simulation — Physics & Electronics",
+    hudStatus: "System online — Artemis-Prime",
+    labelGhidMeniu: "Advisor — OHM-7",
+    ghidMeniu1: "Pick a mission. Read the manual for theory.",
+    titluNiveluri: "Select level",
+    btnPorneste: "Start Mission",
+    navManual: "Technical Manual",
+    navJurnal: "Logbook",
+    btnSetari: "Settings",
+    titluSetari: "Settings",
+    labelLimba: "Interface language",
+    titluHub: "Command Panel — Artemis-Prime",
+    subtitluHub: "Select a work module",
+    btnInapoi: "← Main menu",
+    navMisiuni: "Mission System",
+    navMisiuniDesc: "Solve lunar circuit problems",
+    navManualDesc: "Ohm's law, components",
+    navJurnalDesc: "Lore and space facts",
+    labelProgres: "Progress:",
+    btnDeschideManual: "Manual",
+    btnInapoiMeniu: "← Menu",
+    labelAi: "OHM-7",
+    slotGol: "[ SLOT ]",
+    labelInventar: "Inventory",
+    filtruToate: "All",
+    filtruPutere: "Power",
+    filtruDiode: "Diodes",
+    filtruCapacitor: "Capacitors",
+    filtruRezistori: "Resistors",
+    bat6: "6 V", bat12: "12 V", bat24: "24 V",
+    diodaF: "Diode →", diodaR: "Diode ←",
+    cap05: "0.5 F", cap2: "2.0 F", cap10: "10 F",
+    rez2: "2 Ω", rez12: "12 Ω", rez50: "50 Ω",
+    potentiometru: "Potentiometer",
+    btnLanseaza: "Launch Current",
+    labelScratchpad: "Scratchpad",
+    hintDesen: "Draw formulas or schematics.",
+    labelDiagramaCircuit: "Circuit diagram",
+    labelPotentiometru: "Potentiometer calibration",
+    rezistentaLivePrefix: "Current resistance:",
+    mesajFaraPiesa: "Place a part in the slot.",
+    mesajSelecteazaPiesa: "Select a part from inventory.",
+    titluVictorie: "Mission complete!",
+    victorieDetail: "OHM-7 — progress logged.",
+    btnVictorieMeniu: "Main menu",
+    btnVictorieUrmator: "Next mission →",
+    btnVictorieCircuit: "View solved circuit",
+    titluCircuitRezolvat: "Solved circuit",
+    titluManual: "Technical Manual",
+    titluJurnal: "Logbook",
+    hintCoperta: "Click the cover to open",
+    btnDeschideCarte: "Open manual",
+    btnDeschideJurnal: "Open logbook",
+    btnPagAnterioara: "Previous",
+    btnPagUrmatoare: "Next page",
+    diagramaPlaceholder: "Add image at:",
+    errPiesa: "Install the correct component for this mission."
+  }
+};
 
-  pagini: [
-    {
-      id: 0,
-      categorie: "teorie",
-      stanga: {
-        titlu: "Cuprins",
-        html: "<h4>Manual de Supraviețuire Electronică</h4><p>Selectează un capitol pentru a sări direct la pagina respectivă:</p><button type=\"button\" class=\"link-capitol\" data-sari-la=\"1\">Cap. 1 — Legea lui Ohm</button><button type=\"button\" class=\"link-capitol\" data-sari-la=\"2\">Cap. 2 — Circuite și Kirchhoff</button><button type=\"button\" class=\"link-capitol\" data-sari-la=\"3\">Jurnal de Bord &amp; Fun Facts</button>"
-      },
-      dreapta: {
-        titlu: "Notă introductivă",
-        html: "<p>Acest manual este destinat echipajului stației <strong>Artemis-Prime</strong>. Citește secțiunile de teorie înainte de a modifica circuitele critice ale habitatului.</p><p><em>Regula de aur:</em> verifică tensiunea (U), calculează curentul (I) și alege rezistența (R) astfel încât motoarele să primească puterea necesară fără suprasolicitare.</p>"
-      }
+var inventoryParts = [
+  { cat: "putere", tip: "baterie", val: 6, sprite: "baterie6", labelKey: "bat6" },
+  { cat: "putere", tip: "baterie", val: 12, sprite: "baterie12", labelKey: "bat12" },
+  { cat: "putere", tip: "baterie", val: 24, sprite: "baterie24", labelKey: "bat24" },
+  { cat: "dioda", tip: "dioda", val: 1, orientare: "dreapta", sprite: "diodaDreapta", labelKey: "diodaF" },
+  { cat: "dioda", tip: "dioda", val: 1, orientare: "stanga", sprite: "diodaStanga", labelKey: "diodaR" },
+  { cat: "capacitor", tip: "capacitor", val: 0.5, sprite: "cap05", labelKey: "cap05" },
+  { cat: "capacitor", tip: "capacitor", val: 2, sprite: "cap2", labelKey: "cap2" },
+  { cat: "capacitor", tip: "capacitor", val: 10, sprite: "cap10", labelKey: "cap10" },
+  { cat: "rezistor", tip: "rezistor", val: 2, sprite: "rezistor2", labelKey: "rez2" },
+  { cat: "rezistor", tip: "rezistor", val: 12, sprite: "rezistor12", labelKey: "rez12" },
+  { cat: "rezistor", tip: "rezistor", val: 50, sprite: "rezistor50", labelKey: "rez50" },
+  { cat: "rezistor", tip: "potentiometer", val: 0, sprite: "potentiometru", labelKey: "potentiometru" }
+];
+
+var missionsData = [
+  {
+    id: 1,
+    type: "rezistor",
+    menuDesc: { ro: "Sector Alpha · 12 Ω · 2 A", en: "Sector Alpha · 12 Ω · 2 A" },
+    title: { ro: "Misiunea 1 — Ventilator Sector Alpha", en: "Mission 1 — Sector Alpha Fan" },
+    dialog: {
+      ro: "ALERTĂ: Ventilatorul are nevoie de exact 2 A la 24 V. Calculează R = U/I și montează rezistorul potrivit!",
+      en: "ALERT: The fan needs exactly 2 A at 24 V. Calculate R = U/I and place the correct resistor!"
     },
-    {
-      id: 1,
-      categorie: "teorie",
-      stanga: {
-        titlu: "Legea lui Ohm — Definiții",
-        html: "<h4>Mărimi de bază</h4><p><strong>Tensiunea (U)</strong> — diferența de potențial electric între două puncte ale circuitului. Unitate: <strong>Volt (V)</strong>. Ea „împinge” electronii prin fire.</p><p><strong>Curentul (I)</strong> — fluxul de sarcină electrică pe unitate de timp. Unitate: <strong>Ampere (A)</strong>.</p><p><strong>Rezistența (R)</strong> — opoziția unui material la trecerea curentului. Unitate: <strong>Ohm (Ω)</strong>.</p>"
-      },
-      dreapta: {
-        titlu: "Formula și triunghiul lui Ohm",
-        html: "<p>Într-un circuit liniar, la temperatură constantă:</p><p class=\"text-center font-bold text-lg my-3\">I = U / R</p><p>De aici: U = I · R și R = U / I.</p><div class=\"triunghi-ohm\" aria-hidden=\"true\"><span class=\"poz-u\">U</span><span class=\"poz-i\">I</span><span class=\"poz-r\">R</span></div><p class=\"text-sm\">Acoperă litera pe care o cauți — celelalte două rămân vizibile în poziția corectă (de ex. I = U/R).</p>"
-      }
+    source: { sprite: "baterie24", label: "24 V" },
+    target: { sprite: "ventilator", fxClass: "tinta-ventilator", fxId: "svg-ventilator", fxAnim: "rotate-anim" },
+    circuit: { inMission: "circuite/C1.png", solved: "circuite/C1R.png" },
+    U: 24,
+    I_target: 2,
+    answer: 12,
+    arrows: false,
+    win: { ro: "Curent stabil la 2 A — ventilator repornit.", en: "Stable 2 A — fan restarted." },
+    success: {
+      ro: "I = 24 V / 12 Ω = 2 A. Ventilatorul funcționează.",
+      en: "I = 24 V / 12 Ω = 2 A. The fan is running."
     },
-    {
-      id: 2,
-      categorie: "teorie",
-      stanga: {
-        titlu: "Circuite — Noțiuni",
-        html: "<h4>Ce este un circuit?</h4><p>Un <strong>circuit electric închis</strong> este o cale continuă prin care curentul poate circula de la sursă, prin consumatori (rezistoare, motoare), și înapoi la sursă.</p><p>În baza lunară, panourile solare și bateriile furnizează tensiunea; ventilatoarele și modulele de viață consumă curent.</p>"
+    errors: {
+      wrongPart: {
+        ro: "EROARE: Montează un rezistor. Legea lui Ohm: I = U/R.",
+        en: "ERROR: Place a resistor. Ohm's law: I = U/R."
       },
-      dreapta: {
-        titlu: "Legile lui Kirchhoff",
-        html: "<p><strong>Legea nodurilor (KCL):</strong> suma curenților care intră într-un nod este egală cu suma curenților care ies.</p><div class=\"schema-kirch\"><span class=\"nod\"></span><span class=\"fir\"></span><span class=\"nod\"></span><span class=\"fir\"></span><span class=\"nod\"></span></div><p class=\"text-sm text-center\">Nod — punct de ramificare</p><p class=\"mt-3\"><strong>Legea mesh-urilor (KVL):</strong> suma algebrică a tensiunilor pe o buclă închisă este zero.</p><div class=\"schema-kirch mt-2\"><span class=\"fir\" style=\"width:20px\"></span><span>+U</span><span class=\"fir\"></span><span>−IR</span><span class=\"fir\" style=\"width:20px\"></span></div><p class=\"text-sm\">Pe o buclă simplă: tensiunea sursei se „împarte” pe elementele serie.</p>"
-      }
-    },
-    {
-      id: 3,
-      categorie: "poveste",
-      stanga: {
-        titlu: "Jurnal de Bord — Ziua 47",
-        html: "<h4>Baza Artemis-Prime</h4><p><strong>Locație:</strong> Craterul Shackleton, marginea sudică a Lunii.</p><p>O micrometeorită a perforat scutul secundar de praf. Praful lunar (<strong>regolitul</strong>) a pătruns în conductele de aerisire și a blocat turbinele modulului de oxigen. Habitatul e în pericol — ventilatorul Sector Alpha trebuie repornit controlat.</p><p class=\"text-sm italic\">Semnat: Cmdr. Elena V., inginer sistem de viață.</p>"
+      2: {
+        ro: "EROARE: R = 2 Ω → I = 24/2 = 12 A (supracurent, risc scurtcircuit).",
+        en: "ERROR: R = 2 Ω → I = 24/2 = 12 A (overcurrent, short-circuit risk)."
       },
-      dreapta: {
-        titlu: "Arhivă educațională",
-        html: "<div class=\"caseta-fun-fact\"><strong>Fun Fact Spațial — Lună</strong>Știai că praful lunar (regolitul) este extrem de abraziv, se comportă ca niște cioburi mici de sticlă și miroase a praf de pușcă ars? Acesta plutește din cauza încărcării electrostatice de la Soare și a distrus costumele astronauților din misiunile Apollo!</div><div class=\"caseta-fun-fact\"><strong>Fun Fact Spațial — Electronică</strong>În vidul spațial nu există aer care să preia căldura prin convecție. Componentele electronice (cum sunt rezistori mari) se pot supraîncălzi rapid dacă nu sunt conectate la radiatoare speciale care elimină căldura prin radiație termică!</div>"
+      50: {
+        ro: "EROARE: R = 50 Ω → I = 24/50 = 0,48 A (ventilatorul nu pornește).",
+        en: "ERROR: R = 50 Ω → I = 24/50 = 0.48 A (fan won't start)."
+      },
+      default: {
+        ro: "EROARE: I = 24/R. Țintă: I = 2 A → R = 12 Ω.",
+        en: "ERROR: I = 24/R. Target: I = 2 A → R = 12 Ω."
       }
     }
+  },
+  {
+    id: 2,
+    type: "serie",
+    menuDesc: { ro: "Sub-stație · 36 V", en: "Substation · 36 V" },
+    title: { ro: "Misiunea 2 — Tensiuni în serie", en: "Mission 2 — Series voltage" },
+    dialog: {
+      ro: "Grila necesită 36 V. Tensiunile în serie se adună: U_total = U₁ + U₂.",
+      en: "Grid needs 36 V. Series voltages add: U_total = U₁ + U₂."
+    },
+    source: { sprite: "baterie24", label: "24 V" },
+    target: { sprite: "grid", fxClass: "tinta-grid", fxId: "svg-grid", fxAnim: "grid-activ" },
+    circuit: { inMission: "circuite/C2.png", solved: "circuite/C2R.png" },
+    U_base: 24,
+    U_target: 36,
+    answer: 12,
+    arrows: false,
+    win: { ro: "Grila la 36 V — sub-stație online.", en: "Grid at 36 V — online." },
+    success: {
+      ro: "24 V + 12 V = 36 V. U_total = U₁ + U₂.",
+      en: "24 V + 12 V = 36 V. U_total = U₁ + U₂."
+    },
+    errors: {
+      wrongPart: {
+        ro: "EROARE: Montează o baterie auxiliară în serie.",
+        en: "ERROR: Add a series battery."
+      },
+      24: {
+        ro: "EROARE: 24+24 = 48 V > 36 V (supratensiune pe grilă).",
+        en: "ERROR: 24+24 = 48 V > 36 V (grid overvoltage)."
+      },
+      6: {
+        ro: "EROARE: 24+6 = 30 V < 36 V (tensiune insuficientă).",
+        en: "ERROR: 24+6 = 30 V < 36 V (insufficient voltage)."
+      },
+      default: {
+        ro: "EROARE: U_total = 24 + U_bat. Țintă: 36 V → +12 V.",
+        en: "ERROR: U_total = 24 + U_bat. Target: 36 V → +12 V."
+      }
+    }
+  },
+  {
+    id: 3,
+    type: "dioda",
+    menuDesc: { ro: "Antenă · polarizare", en: "Antenna · polarization" },
+    title: { ro: "Misiunea 3 — Diodă protecție", en: "Mission 3 — Protection diode" },
+    dialog: {
+      ro: "Feedback EM de la antenă. Dioda → permite curent spre exterior; ← blochează (0 A).",
+      en: "EM feedback from antenna. Diode → allows forward current; ← blocks (0 A)."
+    },
+    source: { sprite: "sursa", label: "12 V" },
+    target: { sprite: "antena", fxClass: "tinta-antena" },
+    circuit: { inMission: "circuite/C3.png", solved: "circuite/C3R.png" },
+    answer: "dreapta",
+    arrows: true,
+    win: { ro: "Diodă OK — antenă transmițând.", en: "Diode OK — transmitting." },
+    success: {
+      ro: "Polarizare directă: curent spre antenă, feedback blocat.",
+      en: "Forward bias: current to antenna, feedback blocked."
+    },
+    errors: {
+      wrongPart: { ro: "EROARE: Montează o diodă.", en: "ERROR: Install a diode." },
+      stanga: {
+        ro: "EROARE: Diodă ← = polarizare inversă → circuit deschis, I = 0 A.",
+        en: "ERROR: Diode ← = reverse bias → open circuit, I = 0 A."
+      },
+      default: {
+        ro: "EROARE: Sensul diodei determină dacă I > 0 sau I = 0.",
+        en: "ERROR: Diode direction sets I > 0 or I = 0."
+      }
+    }
+  },
+  {
+    id: 4,
+    type: "capacitor",
+    menuDesc: { ro: "Laser · 2 F", en: "Laser · 2 F" },
+    title: { ro: "Misiunea 4 — Condensator laser", en: "Mission 4 — Laser capacitor" },
+    dialog: {
+      ro: "Burst laser: 2 F pentru descărcare rapidă. Q = C·U — capacitate insuficientă = fără foc.",
+      en: "Laser burst: 2 F for rapid discharge. Q = C·U — insufficient C = no fire."
+    },
+    source: { sprite: "sursa", label: "Gen." },
+    target: { sprite: "laser", fxClass: "tinta-laser flash-laser", fxId: "svg-laser", fxAnim: "laser-activ" },
+    circuit: { inMission: "circuite/C4.png", solved: "circuite/C4R.png" },
+    answer: 2,
+    arrows: false,
+    win: { ro: "Laser încărcat — descărcare OK.", en: "Laser charged — discharge OK." },
+    success: { ro: "C = 2 F — energie suficientă pentru burst.", en: "C = 2 F — enough energy for burst." },
+    errors: {
+      wrongPart: { ro: "EROARE: Montează un condensator.", en: "ERROR: Place a capacitor." },
+      "0.5": {
+        ro: "EROARE: 0,5 F — energie stocată prea mică, laser offline.",
+        en: "ERROR: 0.5 F — stored energy too low, laser offline."
+      },
+      10: {
+        ro: "EROARE: 10 F — descărcare necontrolată, laser offline.",
+        en: "ERROR: 10 F — uncontrolled discharge, laser offline."
+      },
+      default: {
+        ro: "EROARE: Pentru burst la 2 F, alege exact 2,0 F.",
+        en: "ERROR: For 2 F burst, choose exactly 2.0 F."
+      }
+    }
+  },
+  {
+    id: 5,
+    type: "potentiometer",
+    menuDesc: { ro: "Seră LED · 1,5 A · 8 Ω", en: "Greenhouse · 1.5 A · 8 Ω" },
+    title: { ro: "Misiunea 5 — Lux seră hidroponică", en: "Mission 5 — Greenhouse lux" },
+    dialog: {
+      ro: "Bio-dom: limitează la 1,5 A la 12 V. Montează potențiometrul și calibrează: R = 12/1,5 = 8 Ω.",
+      en: "Bio-dome: limit to 1.5 A at 12 V. Insert potentiometer and calibrate: R = 12/1.5 = 8 Ω."
+    },
+    source: { sprite: "baterie12", label: "12 V" },
+    target: { sprite: "seraLed", fxClass: "tinta-sera-led", fxId: "svg-sera-led", fxAnim: "sera-led-activ" },
+    circuit: { inMission: "circuite/C5.png", solved: "circuite/C5R.png" },
+    U: 12,
+    I_target: 1.5,
+    answer: 8,
+    potMax: 20,
+    arrows: false,
+    win: { ro: "1,5 A stabil — culturi protejate.", en: "Stable 1.5 A — crops safe." },
+    success: {
+      ro: "R = 8 Ω → I = 12/8 = 1,5 A. LED-uri verzi stabile.",
+      en: "R = 8 Ω → I = 12/8 = 1.5 A. Stable green LEDs."
+    },
+    errors: {
+      wrongPart: {
+        ro: "EROARE: Montează potențiometrul și reglează rezistența.",
+        en: "ERROR: Insert potentiometer and adjust resistance."
+      },
+      0: {
+        ro: "EROARE: R = 0 Ω → I = ∞ (scurtcircuit).",
+        en: "ERROR: R = 0 Ω → I = ∞ (short circuit)."
+      },
+      2: {
+        ro: "EROARE: R = 2 Ω → I = 12/2 = 6 A (supra-iluminare).",
+        en: "ERROR: R = 2 Ω → I = 12/2 = 6 A (over-illumination)."
+      },
+      12: {
+        ro: "EROARE: R = 12 Ω → I = 12/12 = 1 A (lumină insuficientă).",
+        en: "ERROR: R = 12 Ω → I = 12/12 = 1 A (insufficient light)."
+      },
+      default: {
+        ro: "EROARE: I = 12/R. Țintă: 1,5 A → R = 8 Ω.",
+        en: "ERROR: I = 12/R. Target: 1.5 A → R = 8 Ω."
+      }
+    }
+  }
+];
+
+var misiuniOhmSpace = missionsData;
+
+var manualTehnic = {
+  titlu: "Manual Tehnic",
+  totalPagini: 6,
+  pagini: [
+    { id: 0, stanga: { titlu: "Cuprins", html: '<button type="button" class="link-capitol" data-sari-la="1">Ohm</button><button type="button" class="link-capitol" data-sari-la="2">Serie</button><button type="button" class="link-capitol" data-sari-la="3">Diodă</button><button type="button" class="link-capitol" data-sari-la="4">Condensator</button><button type="button" class="link-capitol" data-sari-la="5">Inventar</button>' }, dreapta: { titlu: "Flux", html: "<p>Baterie → <strong>[SLOT]</strong> → Sarcină</p>" } },
+    { id: 1, stanga: { titlu: "Legea lui Ohm", html: "<p><strong>I = U / R</strong></p><div class=\"triunghi-ohm\"><span class=\"poz-u\">U</span><span class=\"poz-i\">I</span><span class=\"poz-r\">R</span></div>" }, dreapta: { titlu: "Exemplu", html: "<p>24 V, 2 A → <strong>R = 12 Ω</strong></p>" } },
+    { id: 2, stanga: { titlu: "Serie", html: "<p>U<sub>total</sub> = U₁ + U₂ + …</p>" }, dreapta: { titlu: "36 V", html: "<p>24 V + 12 V = <strong>36 V</strong></p>" } },
+    { id: 3, stanga: { titlu: "Diodă", html: "<p>Conduce într-un sens · invers = 0 A</p>" }, dreapta: { titlu: "RF", html: "<p>Blochează feedback EM</p>" } },
+    { id: 4, stanga: { titlu: "Condensator", html: "<p>Stochează sarcină · unitate Farad (F)</p>" }, dreapta: { titlu: "Burst", html: "<p>2 F pentru impuls laser</p>" } },
+    { id: 5, stanga: { titlu: "Inventar", html: "<p>Filtre + drag în slot</p>" }, dreapta: { titlu: "Validare", html: "<p><strong>Lansează Curentul</strong></p>" } }
+  ]
+};
+
+var jurnalData = {
+  titlu: "Jurnal",
+  totalPagini: 2,
+  pagini: [
+    { id: 0, stanga: { titlu: "Ziua 52", html: "<p>Sub-stație 24 V. Releu antenă.</p>" }, dreapta: { titlu: "Apărare", html: "<p>Laser — condensatori mari.</p>" } },
+    { id: 1, stanga: { titlu: "Lună", html: "<p>În vid, descărcarea condensatorului e silențioasă.</p>" }, dreapta: { titlu: "InfoEducație", html: "<p>OhmSpace — Artemis-Prime</p>" } }
   ]
 };

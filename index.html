@@ -15,7 +15,7 @@
     <!-- Setări limbă — colț dreapta-sus -->
     <div class="splash-setari-wrap">
       <button type="button" id="btn-splash-setari" class="btn-splash-setari" aria-label="Setări" aria-expanded="false" aria-controls="meniu-limba-splash">
-        <i data-lucide="settings" class="icon-splash-setari" aria-hidden="true"></i>
+        <i data-lucide="settings" class="icon-lucide icon-splash-setari" aria-hidden="true"></i>
         <span class="sr-only" data-i18n="btnSetari">Setări</span>
       </button>
       <div id="meniu-limba-splash" class="meniu-limba-splash hidden" role="menu" aria-label="Limba interfeței">
@@ -27,8 +27,8 @@
       </div>
     </div>
 
-    <figure class="attachment attachment-splash splash-nava max-w-sm md:max-w-md mx-auto">
-      <img src="poze/nava2.png" alt="Navă spațială Artemis-Prime" class="w-auto h-auto max-h-70 mx-auto">
+    <figure class="splash-nava-figura">
+      <img src="poze/nava2.png" alt="Navă spațială Artemis-Prime" class="splash-nava-img">
     </figure>
     <header class="splash-header text-center">
       <h1 class="titlu-ohmspace text-6xl md:text-8xl font-bold tracking-widest mb-3">OhmSpace</h1>
@@ -39,53 +39,98 @@
   </section>
 
   <!-- Ecran 1: Meniu principal -->
-  <section id="ecran-meniu" class="ecran hidden min-h-screen p-4 md:p-8">
-    <div class="meniu-start-grid max-w-6xl mx-auto min-h-[calc(100vh-2rem)] grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-stretch">
+  <section id="ecran-meniu" class="ecran ecran-meniu hidden min-h-screen p-5 md:p-10">
+    <div class="meniu-continut mx-auto">
 
-      <!-- Stânga: zonă imagine / atașament -->
-      <figure class="attachment attachment-large">
-        <img src="poze/fundal-meniu.jpg" alt="Fundal meniu" class="w-full h-auto rounded">
-      </figure>
+      <div class="meniu-layout grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+
+      <!-- Stânga: ghid + chat -->
+      <aside class="meniu-ghid lg:col-span-5 xl:col-span-5">
+        <div class="meniu-hud">
+          <span class="hud-punct activ"></span>
+          <span class="hud-linie" data-i18n="hudStatus">Sistem online — Artemis-Prime</span>
+        </div>
+        <div class="meniu-ghid-rand">
+          <figure class="ghid-avatar">
+            <img src="poze/Astronaut.png" alt="OHM-7" class="ghid-avatar-img">
+          </figure>
+          <div class="chat-ghid">
+            <p class="chat-ghid-nume">
+              <i data-lucide="radio" class="icon-lucide icon-inline" aria-hidden="true"></i>
+              <span data-i18n="labelGhidMeniu">Consilier — OHM-7</span>
+            </p>
+            <div id="mesaj-ghid-meniu" class="chat-ghid-balon" data-i18n="ghidMeniu1">
+              Bun venit la Artemis-Prime. Alege o misiune sau deschide manualele — citește teoria înainte de Sector Alpha.
+            </div>
+          </div>
+        </div>
+      </aside>
 
       <!-- Dreapta: titlu, niveluri, opțiuni -->
-      <div class="meniu-start-dreapta flex flex-col justify-center gap-5">
-        <header>
-          <h1 class="titlu-ohmspace text-4xl md:text-5xl font-bold tracking-widest mb-1">OhmSpace</h1>
-          <p class="text-cyan-400/80 text-xs uppercase tracking-[0.25em]" data-i18n="subtitluStart">Simulare educațională — Fizică &amp; Electronică</p>
+      <div class="meniu-panou lg:col-span-7 xl:col-span-7 flex flex-col justify-center gap-6">
+        <header class="meniu-header-titlu">
+          <h1 class="titlu-ohmspace titlu-meniu-mare font-bold tracking-widest mb-2">OhmSpace</h1>
+          <p class="meniu-subtitlu text-cyan-400/80 uppercase tracking-[0.25em]" data-i18n="subtitluStart">Simulare educațională — Fizică &amp; Electronică</p>
         </header>
 
         <div class="panou-niveluri">
-          <h2 class="text-xs uppercase text-slate-500 tracking-widest mb-3" data-i18n="titluNiveluri">Selectează nivelul</h2>
-          <div id="lista-niveluri" class="flex flex-col gap-2">
+          <h2 class="meniu-eticheta-sectiune uppercase text-slate-500 tracking-widest mb-4" data-i18n="titluNiveluri">Selectează nivelul</h2>
+          <div id="lista-niveluri" class="lista-niveluri-meniu flex flex-col">
             <button type="button" class="card-nivel activ" data-nivel="1" data-disponibil="1">
               <span class="card-nivel-num">01</span>
               <span class="card-nivel-info">
-                <span class="card-nivel-titlu" data-i18n="nivel1Titlu">Misiunea 1 — Legea lui Ohm</span>
-                <span class="card-nivel-desc" data-i18n="nivel1Desc">Ventilator Sector Alpha · 24 V</span>
+                <span class="card-nivel-titlu" data-i18n="nivel1Titlu">Misiunea 1 — Rezistor &amp; ventilator</span>
+                <span class="card-nivel-desc" data-i18n="nivel1Desc">Sector Alpha · 12 Ω · 2 A</span>
               </span>
             </button>
-            <button type="button" class="card-nivel blocat" data-nivel="2" data-disponibil="0" disabled>
+            <button type="button" class="card-nivel" data-nivel="2" data-disponibil="1">
               <span class="card-nivel-num">02</span>
               <span class="card-nivel-info">
-                <span class="card-nivel-titlu" data-i18n="nivel2Titlu">Misiunea 2 — Kirchhoff</span>
-                <span class="card-nivel-desc" data-i18n="nivelBlocat">În curând</span>
+                <span class="card-nivel-titlu" data-i18n="nivel2Titlu">Misiunea 2 — Tensiuni în serie</span>
+                <span class="card-nivel-desc" data-i18n="nivel2Desc">Sub-stație solară · 36 V</span>
               </span>
             </button>
-            <button type="button" class="card-nivel blocat" data-nivel="3" data-disponibil="0" disabled>
+            <button type="button" class="card-nivel" data-nivel="3" data-disponibil="1">
               <span class="card-nivel-num">03</span>
               <span class="card-nivel-info">
-                <span class="card-nivel-titlu" data-i18n="nivel3Titlu">Misiunea 3 — Circuite mixte</span>
-                <span class="card-nivel-desc" data-i18n="nivelBlocat">În curând</span>
+                <span class="card-nivel-titlu" data-i18n="nivel3Titlu">Misiunea 3 — Diodă</span>
+                <span class="card-nivel-desc" data-i18n="nivel3Desc">Releu antenă · polarizare</span>
+              </span>
+            </button>
+            <button type="button" class="card-nivel" data-nivel="4" data-disponibil="1">
+              <span class="card-nivel-num">04</span>
+              <span class="card-nivel-info">
+                <span class="card-nivel-titlu" data-i18n="nivel4Titlu">Misiunea 4 — Condensator</span>
+                <span class="card-nivel-desc" data-i18n="nivel4Desc">Laser apărare · 2 F</span>
+              </span>
+            </button>
+            <button type="button" class="card-nivel" data-nivel="5" data-disponibil="1">
+              <span class="card-nivel-num">05</span>
+              <span class="card-nivel-info">
+                <span class="card-nivel-titlu" data-i18n="nivel5Titlu">Misiunea 5 — Potențiometru</span>
+                <span class="card-nivel-desc" data-i18n="nivel5Desc">Seră LED · 1,5 A · 8 Ω</span>
               </span>
             </button>
           </div>
         </div>
 
-        <nav class="meniu-optiuni flex flex-col gap-2">
-          <button id="btn-porneste-misiune" type="button" class="btn-neon w-full" data-i18n="btnPorneste">Inițiază Misiunea</button>
-          <button type="button" id="btn-start-manual" class="btn-neon btn-neon-secundar w-full" data-i18n="navManual">Manual Tehnic (Teorie)</button>
-          <button type="button" id="btn-start-jurnal" class="btn-neon btn-neon-secundar w-full" data-i18n="navJurnal">Jurnal de Bord (Poveste)</button>
-          <button id="btn-setari" type="button" class="btn-neon btn-neon-secundar w-full" data-i18n="btnSetari">Setări</button>
+        <nav class="meniu-optiuni flex flex-col gap-3">
+          <button id="btn-porneste-misiune" type="button" class="btn-meniu btn-meniu-misiune btn-cu-icon w-full">
+            <i data-lucide="rocket" class="icon-lucide" aria-hidden="true"></i>
+            <span data-i18n="btnPorneste">Inițiază Misiunea</span>
+          </button>
+          <button type="button" id="btn-start-manual" class="btn-meniu btn-meniu-manual btn-cu-icon w-full">
+            <i data-lucide="book-open" class="icon-lucide" aria-hidden="true"></i>
+            <span data-i18n="navManual">Manual Tehnic (Teorie)</span>
+          </button>
+          <button type="button" id="btn-start-jurnal" class="btn-meniu btn-meniu-jurnal btn-cu-icon w-full">
+            <i data-lucide="scroll-text" class="icon-lucide" aria-hidden="true"></i>
+            <span data-i18n="navJurnal">Jurnal de Bord (Poveste)</span>
+          </button>
+          <button id="btn-setari" type="button" class="btn-meniu btn-meniu-setari btn-cu-icon w-full">
+            <i data-lucide="settings" class="icon-lucide" aria-hidden="true"></i>
+            <span data-i18n="btnSetari">Setări</span>
+          </button>
         </nav>
 
         <div id="panou-setari" class="panou-setari hidden p-4 rounded-lg border border-slate-600">
@@ -96,6 +141,8 @@
             <option value="en">English</option>
           </select>
         </div>
+      </div>
+
       </div>
     </div>
   </section>
@@ -110,37 +157,35 @@
       <button type="button" id="btn-hub-inapoi" class="btn-neon btn-neon-mic" data-i18n="btnInapoi">← Meniu principal</button>
     </header>
 
-    <figure class="attachment attachment-small mb-6 max-w-md">
-      <img src="poze/emblema-baza.png" alt="Emblema baza" class="w-full h-auto rounded">
-    </figure>
+    <!-- emblem placeholder removed to declutter UI -->
 
     <nav class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto w-full flex-1 items-center">
       <button type="button" id="btn-nav-misiuni" class="card-hub">
-        <span class="card-hub-icon">⚡</span>
+        <i data-lucide="zap" class="icon-lucide card-hub-icon" aria-hidden="true"></i>
         <span class="card-hub-titlu" data-i18n="navMisiuni">Sistem de Misiuni</span>
         <span class="card-hub-desc" data-i18n="navMisiuniDesc">Rezolvă probleme de circuit pe Lună</span>
       </button>
       <button type="button" id="btn-nav-manual" class="card-hub">
-        <span class="card-hub-icon">📖</span>
+        <i data-lucide="book-open" class="icon-lucide card-hub-icon" aria-hidden="true"></i>
         <span class="card-hub-titlu" data-i18n="navManual">Manual Tehnic (Teorie)</span>
         <span class="card-hub-desc" data-i18n="navManualDesc">Legea lui Ohm, Kirchhoff</span>
       </button>
       <button type="button" id="btn-nav-jurnal" class="card-hub">
-        <span class="card-hub-icon">📡</span>
+        <i data-lucide="satellite" class="icon-lucide card-hub-icon" aria-hidden="true"></i>
         <span class="card-hub-titlu" data-i18n="navJurnal">Jurnal de Bord (Poveste)</span>
         <span class="card-hub-desc" data-i18n="navJurnalDesc">Lore și fapte spațiale</span>
       </button>
     </nav>
     <div id="progres-global" class="mt-8 text-center text-sm text-slate-500">
       <span data-i18n="labelProgres">Progres misiuni:</span>
-      <span id="indicator-progres" class="text-verde-neon ml-2">0 / 1</span>
+      <span id="indicator-progres" class="text-verde-neon ml-2">0 / 5</span>
     </div>
   </section>
 
-  <!-- Ecran 3: Misiunea 1 -->
+  <!-- Ecran 3: Misiuni -->
   <section id="ecran-misiune" class="ecran hidden min-h-screen flex flex-col">
     <header class="flex flex-wrap items-center justify-between gap-3 p-4 border-b border-slate-700 bg-slate-900/95 sticky top-0 z-20">
-      <h2 class="text-lg text-cyan-400" data-i18n="titluMisiune1">Misiunea 1 — Legea lui Ohm pe Lună</h2>
+      <h2 id="titlu-misiune-curenta" class="text-lg text-cyan-400" data-i18n="titluMisiune1">Misiunea 1 — Legea lui Ohm pe Lună</h2>
       <div class="flex gap-2 flex-wrap">
         <button type="button" id="btn-manual-din-joc" class="btn-neon btn-neon-mic" data-i18n="btnDeschideManual">Deschide Manualul Tehnic</button>
         <button type="button" id="btn-misiune-inapoi" class="btn-neon btn-neon-mic btn-neon-secundar" data-i18n="btnInapoiMeniu">← Meniu</button>
@@ -148,99 +193,207 @@
     </header>
 
     <main class="flex-1 grid grid-cols-1 xl:grid-cols-12 gap-4 p-4 min-h-0">
-      <!-- Stânga: AI bazei -->
-      <aside class="xl:col-span-3 flex flex-col gap-3">
-        <div class="panou-sf p-4 flex flex-col gap-3 h-full">
-          <figure class="attachment attachment-avatar">
-            <img id="avatar-ai" src="poze/avatar-ohm7.png" alt="Avatar OHM-7" class="w-full h-auto rounded-full max-h-40">
-          </figure>
-          <p class="text-xs text-cyan-400/70 uppercase tracking-wider" data-i18n="labelAi">AI Baza — Unitatea OHM-7</p>
-          <div id="dialog-ai" class="dialog-ai text-sm leading-relaxed text-slate-300 border-l-2 border-rosu-neon pl-3" data-i18n="dialogMisiune1">
-            ALERTĂ: Modulul de Oxigen din Sectorul Alpha s-a oprit din cauza prafului lunar (regolit). Tensiunea de la panoul solar este stabilă la 24V. Ventilatorul principal are nevoie de exact 2 Amperi pentru a reporni fără să scurtcircuiteze rețeaua. Calculează și plasează rezistorul potrivit din inventar!
+      <!-- Stânga: radio / walkie-talkie -->
+      <aside class="xl:col-span-3 flex flex-col">
+        <div class="panou-comms panou-sf h-full">
+          <div class="comms-antet">
+            <i data-lucide="radio" class="icon-lucide icon-inline" aria-hidden="true"></i>
+            <span class="comms-eticheta" data-i18n="labelAi">AI Baza — Unitatea OHM-7</span>
+            <span class="comms-live">LIVE</span>
           </div>
+          <figure class="comms-walkie">
+            <img id="avatar-ai" src="poze/Walkie.png" alt="Walkie-talkie OHM-7" class="comms-walkie-img">
+          </figure>
+          <div id="dialog-ai" class="comms-mesaj"></div>
           <p id="mesaj-rezultat" class="mesaj-rezultat text-sm hidden"></p>
         </div>
       </aside>
 
-      <!-- Centru: schemă + inventar -->
-      <div class="xl:col-span-6 flex flex-col gap-4">
-        <div class="panou-sf p-4 flex-1">
-          <h3 class="text-xs uppercase text-slate-500 mb-4 tracking-widest" data-i18n="labelSchema">Schema electronică — Sector Alpha</h3>
-          <div id="schema-circuit" class="schema-circuit flex flex-col items-center justify-center gap-2 py-6">
-            <div class="schema-rand flex items-center gap-2 flex-wrap justify-center">
-              <div id="container-baterie" class="piesa-schema piesa-baterie text-center px-3 py-2 rounded border-2 border-amber-500/80 bg-amber-950/30">
-                <div class="sprite-wrap" data-sprite="baterie"></div>
-                <span class="text-amber-400 font-bold text-sm block mt-1">24 V</span>
-                <span class="block text-xs text-slate-500" data-i18n="labelBaterie">Baterie</span>
-              </div>
-              <div class="linie-neon linie-oriz" aria-hidden="true"></div>
-              <div id="slot-rezistor" class="slot-gol pulse-anim" data-zona-drop="rezistor">
-                <div id="continut-slot" class="continut-slot">
-                  <span id="text-slot" class="text-slot-label" data-i18n="slotGol">[ SLOT GOL ]</span>
-                </div>
-              </div>
-              <div class="linie-neon linie-oriz" aria-hidden="true"></div>
-              <div id="ventilator-piesa" class="piesa-schema piesa-ventilator text-center px-3 py-2 rounded border-2 border-slate-600">
-                <div id="container-ventilator" class="sprite-wrap" data-sprite="ventilator"></div>
-                <span class="text-slate-300 text-sm block mt-1" data-i18n="labelVentilator">Ventilator</span>
-                <span class="block text-xs text-slate-500">2 A necesari</span>
+      <!-- Centru: circuit orizontal + inventar global -->
+      <div class="xl:col-span-6 flex flex-col gap-3 min-h-0">
+        <div id="zona-circuit" class="panou-sf panou-circuit-misiune p-4 flex-1 flex flex-col min-h-0">
+          <div id="schema-circuit" class="schema-circuit schema-rand-oriz flex items-center justify-center gap-1 sm:gap-2 py-4 px-2 w-full max-w-full overflow-x-auto shrink-0">
+            <div id="circuit-sursa" class="piesa-schema shrink-0 text-center px-2 py-2">
+              <div id="circuit-sursa-sprite" class="sprite-wrap"></div>
+              <span id="circuit-sursa-val" class="block font-mono text-xs text-amber-400/90 mt-1 font-bold"></span>
+            </div>
+            <div class="linie-neon linie-oriz shrink-0" aria-hidden="true"></div>
+            <div id="slot-misiune" class="slot-gol slot-conectare pulse-anim shrink-0">
+              <div id="continut-slot" class="continut-slot">
+                <span id="text-slot" class="text-slot-label" data-i18n="slotGol">[ SLOT ]</span>
               </div>
             </div>
-            <p class="text-xs text-slate-500 mt-4" data-i18n="hintMontare">Selectează o piesă din inventar, apoi click pe slotul gol.</p>
+            <div id="linie-spre-tinta" class="linie-neon linie-oriz shrink-0" aria-hidden="true"></div>
+            <div id="circuit-tinta" class="piesa-schema shrink-0 text-center px-2 py-2">
+              <div id="circuit-tinta-sprite" class="sprite-wrap"></div>
+            </div>
+          </div>
+
+          <div id="panou-potentiometru" class="panou-potentiometru hidden" aria-hidden="true">
+            <label for="potentiometer-slider" class="potentiometru-label" data-i18n="labelPotentiometru">Calibrare potențiometru</label>
+            <input type="range" min="0" max="20" step="1" value="0" id="potentiometer-slider" class="potentiometer-slider w-full mt-2 accent-cyan-500">
+            <p id="potentiometru-valoare-live" class="potentiometru-valoare-live">Rezistență curentă: 0 Ω</p>
+          </div>
+
+          <div id="zona-diagrama-circuit" class="zona-diagrama-circuit">
+            <h3 class="diagrama-circuit-titlu" data-i18n="labelDiagramaCircuit">Diagramă circuit (real)</h3>
+            <figure class="diagrama-circuit-cadru">
+              <img id="img-diagrama-circuit" class="diagrama-circuit-img hidden" src="" alt="" decoding="async">
+              <div id="diagrama-circuit-placeholder" class="diagrama-circuit-placeholder">
+                <i data-lucide="image" class="icon-lucide diagrama-placeholder-icon" aria-hidden="true"></i>
+                <p id="diagrama-placeholder-text" class="diagrama-placeholder-msg"></p>
+                <code id="diagrama-placeholder-cale" class="diagrama-placeholder-cale"></code>
+              </div>
+            </figure>
+            <p id="diagrama-circuit-caption" class="diagrama-circuit-caption"></p>
           </div>
         </div>
 
-        <div class="panou-sf p-4">
-          <h3 class="text-xs uppercase text-slate-500 mb-3 tracking-widest" data-i18n="labelInventar">Inventar piese</h3>
-          <div id="inventar-piese" class="inventar-piese flex flex-wrap gap-3 justify-center">
-            <div class="piesa-inventar" draggable="true" data-rezistenta="2" data-label="2 Ω" data-sprite="rezistor2">
-              <span class="sprite-inventar" aria-hidden="true"></span>
-              <span class="eticheta-piesa" data-i18n="rez2">Rezistor 2 Ω</span>
-            </div>
-            <div class="piesa-inventar" draggable="true" data-rezistenta="12" data-label="12 Ω" data-sprite="rezistor12">
-              <span class="sprite-inventar" aria-hidden="true"></span>
-              <span class="eticheta-piesa" data-i18n="rez12">Rezistor 12 Ω</span>
-            </div>
-            <div class="piesa-inventar" draggable="true" data-rezistenta="50" data-label="50 Ω" data-sprite="rezistor50">
-              <span class="sprite-inventar" aria-hidden="true"></span>
-              <span class="eticheta-piesa" data-i18n="rez50">Rezistor 50 Ω</span>
+        <div id="panou-inventar-global" class="panou-sf p-3 shrink-0">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <h3 class="text-xs uppercase text-slate-500 tracking-widest m-0" data-i18n="labelInventar">Inventar</h3>
+            <div id="bara-filtre" class="flex flex-wrap gap-1">
+              <button type="button" class="filtru-inventar px-2 py-1 text-xs uppercase tracking-wider rounded border border-cyan-500/40 text-cyan-300 activ" data-filtru="toate" data-i18n="filtruToate">Toate</button>
+              <button type="button" class="filtru-inventar px-2 py-1 text-xs uppercase tracking-wider rounded border border-slate-600 text-slate-400 hover:border-cyan-500/40" data-filtru="putere" data-i18n="filtruPutere">Putere</button>
+              <button type="button" class="filtru-inventar px-2 py-1 text-xs uppercase tracking-wider rounded border border-slate-600 text-slate-400 hover:border-cyan-500/40" data-filtru="dioda" data-i18n="filtruDiode">Diode</button>
+              <button type="button" class="filtru-inventar px-2 py-1 text-xs uppercase tracking-wider rounded border border-slate-600 text-slate-400 hover:border-cyan-500/40" data-filtru="capacitor" data-i18n="filtruCapacitor">Condensatoare</button>
+              <button type="button" class="filtru-inventar px-2 py-1 text-xs uppercase tracking-wider rounded border border-slate-600 text-slate-400 hover:border-cyan-500/40" data-filtru="rezistor" data-i18n="filtruRezistori">Rezistori</button>
             </div>
           </div>
-          <div class="mt-4 flex justify-center">
+          <div id="lista-inventar" class="inventar-piese flex flex-wrap gap-2 justify-center">
+            <button type="button" class="piesa-inventar" data-categorie="putere" data-tip="baterie" data-val="6" data-sprite="baterie6"><span class="sprite-inventar"></span><span class="eticheta-piesa" data-i18n="bat6">6 V</span></button>
+            <button type="button" class="piesa-inventar" data-categorie="putere" data-tip="baterie" data-val="12" data-sprite="baterie12"><span class="sprite-inventar"></span><span class="eticheta-piesa" data-i18n="bat12">12 V</span></button>
+            <button type="button" class="piesa-inventar" data-categorie="putere" data-tip="baterie" data-val="24" data-sprite="baterie24"><span class="sprite-inventar"></span><span class="eticheta-piesa" data-i18n="bat24">24 V</span></button>
+            <button type="button" class="piesa-inventar" data-categorie="dioda" data-tip="dioda" data-val="1" data-orientare="dreapta" data-sprite="diodaDreapta"><span class="sprite-inventar"></span><span class="eticheta-piesa" data-i18n="diodaF">→</span></button>
+            <button type="button" class="piesa-inventar" data-categorie="dioda" data-tip="dioda" data-val="1" data-orientare="stanga" data-sprite="diodaStanga"><span class="sprite-inventar"></span><span class="eticheta-piesa" data-i18n="diodaR">←</span></button>
+            <button type="button" class="piesa-inventar" data-categorie="capacitor" data-tip="capacitor" data-val="0.5" data-sprite="cap05"><span class="sprite-inventar"></span><span class="eticheta-piesa" data-i18n="cap05">0.5 F</span></button>
+            <button type="button" class="piesa-inventar" data-categorie="capacitor" data-tip="capacitor" data-val="2" data-sprite="cap2"><span class="sprite-inventar"></span><span class="eticheta-piesa" data-i18n="cap2">2.0 F</span></button>
+            <button type="button" class="piesa-inventar" data-categorie="capacitor" data-tip="capacitor" data-val="10" data-sprite="cap10"><span class="sprite-inventar"></span><span class="eticheta-piesa" data-i18n="cap10">10 F</span></button>
+            <button type="button" class="piesa-inventar" data-categorie="rezistor" data-tip="rezistor" data-val="2" data-sprite="rezistor2"><span class="sprite-inventar"></span><span class="eticheta-piesa" data-i18n="rez2">2 Ω</span></button>
+            <button type="button" class="piesa-inventar" data-categorie="rezistor" data-tip="rezistor" data-val="12" data-sprite="rezistor12"><span class="sprite-inventar"></span><span class="eticheta-piesa" data-i18n="rez12">12 Ω</span></button>
+            <button type="button" class="piesa-inventar" data-categorie="rezistor" data-tip="rezistor" data-val="50" data-sprite="rezistor50"><span class="sprite-inventar"></span><span class="eticheta-piesa" data-i18n="rez50">50 Ω</span></button>
+            <button type="button" class="piesa-inventar piesa-potentiometru" data-categorie="rezistor" data-tip="potentiometer" data-val="0" data-sprite="potentiometru"><span class="sprite-inventar"></span><span class="eticheta-piesa" data-i18n="potentiometru">Potențiometru</span></button>
+          </div>
+          <div class="mt-3 flex justify-center">
             <button type="button" id="btn-lanseaza-curent" class="btn-neon" data-i18n="btnLanseaza">Lansează Curentul</button>
           </div>
         </div>
       </div>
 
-      <!-- Dreapta: scratchpad -->
+      <!-- Dreapta: caiet desen (formule / scheme) -->
       <aside class="xl:col-span-3 flex flex-col">
-        <div class="panou-sf p-4 h-full flex flex-col">
-          <h3 class="text-xs uppercase text-cyan-400/80 mb-2 tracking-widest" data-i18n="labelScratchpad">Caiet de calcule</h3>
-          <textarea id="scratchpad" class="scratchpad flex-1 min-h-[200px] w-full p-3 rounded resize-y" placeholder="I = U / R ..." spellcheck="false"></textarea>
+        <div class="panou-sf panou-desen p-4 h-full flex flex-col">
+          <div class="desen-antet">
+            <h3 class="text-xs uppercase text-cyan-400/80 tracking-widest" data-i18n="labelScratchpad">Caiet de calcule</h3>
+            <div class="desen-unelte">
+              <button type="button" id="btn-pen" class="unealta activ" title="Pix" aria-pressed="true">
+                <i data-lucide="pen-line" class="icon-lucide" aria-hidden="true"></i>
+              </button>
+              <button type="button" id="btn-radiera" class="unealta" title="Radieră" aria-pressed="false">
+                <i data-lucide="eraser" class="icon-lucide" aria-hidden="true"></i>
+              </button>
+              <button type="button" id="btn-curata-desen" class="unealta" title="Șterge tot">
+                <i data-lucide="trash-2" class="icon-lucide" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+          <div class="desen-canvas-wrap">
+            <canvas id="scratchpad-canvas" class="scratchpad-canvas"></canvas>
+          </div>
+          <p class="desen-hint text-xs text-slate-500" data-i18n="hintDesen">Desenează formule sau scheme cu mouse-ul / degetul.</p>
         </div>
       </aside>
     </main>
   </section>
 
-  <!-- Modal manual (Papers, Please) -->
-  <div id="overlay-manual" class="overlay-manual hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75" aria-hidden="true">
-    <div class="carte-manual relative w-full max-w-5xl max-h-[90vh] flex flex-col">
-      <header class="flex justify-between items-center mb-3 px-2">
-        <h3 id="titlu-manual-modal" class="text-cyan-400 text-sm uppercase tracking-wider">Manual Tehnic</h3>
-        <button type="button" id="btn-inchide-manual" class="btn-inchide text-2xl leading-none text-slate-400 hover:text-rosu-neon" aria-label="Închide">×</button>
+  <!-- Carte 1: Manual Tehnic (fizică) -->
+  <div id="overlay-manual-tehnic" class="overlay-carte hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80" aria-hidden="true">
+    <div class="carte-wrap carte-tehnic">
+      <header class="carte-antet flex justify-between items-center mb-3 px-1">
+        <h3 class="carte-titlu text-cyan-400 text-sm uppercase tracking-wider" data-i18n="titluManual">Manual Tehnic</h3>
+        <button type="button" class="btn-inchide-carte btn-inchide text-2xl leading-none text-slate-400 hover:text-rosu-neon" data-carte="tehnic" aria-label="Închide">×</button>
       </header>
-      <figure class="attachment attachment-manual mb-2 mx-2">
-        <img src="poze/coperta-manual.jpg" alt="Coperta manual" class="w-full h-auto rounded">
-      </figure>
-      <div class="carte-corp flex flex-1 min-h-0 border-4 border-slate-700 rounded-sm shadow-2xl bg-amber-50/95 text-slate-900 overflow-hidden">
-        <article id="pagina-stanga" class="pagina-carte pagina-stanga flex-1 p-6 overflow-y-auto border-r-2 border-slate-400/50"></article>
-        <article id="pagina-dreapta" class="pagina-carte pagina-dreapta flex-1 p-6 overflow-y-auto"></article>
+
+      <!-- Copertă — se deschide înainte de pagini -->
+      <div id="coperta-manual-tehnic" class="coperta-carte">
+        <figure class="coperta-figura">
+          <img src="poze/CopertaManualTehnic.png" alt="Coperta manual tehnic" class="coperta-img">
+        </figure>
+        <p class="coperta-hint" data-i18n="hintCoperta">Apasă coperta pentru a deschide cartea</p>
+        <button type="button" id="btn-deschide-tehnic" class="btn-neon btn-neon-mic" data-i18n="btnDeschideCarte">Deschide manualul</button>
       </div>
-      <footer class="flex justify-between items-center mt-4 px-2 gap-4">
-        <button type="button" id="btn-pagina-anterioara" class="btn-neon btn-neon-mic btn-neon-secundar" data-i18n="btnPagAnterioara">Pagina precedentă</button>
-        <span id="indicator-pagini" class="text-slate-400 text-sm">1 / 4</span>
-        <button type="button" id="btn-pagina-urmatoare" class="btn-neon btn-neon-mic" data-i18n="btnPagUrmatoare">Pagina următoare</button>
-      </footer>
+
+      <!-- Interior — dimensiuni fixe -->
+      <div id="interior-manual-tehnic" class="interior-carte hidden">
+        <div class="carte-corp-fix">
+          <article id="pagina-stanga-tehnic" class="pagina-carte pagina-stanga"></article>
+          <article id="pagina-dreapta-tehnic" class="pagina-carte pagina-dreapta"></article>
+        </div>
+        <footer class="carte-footer flex justify-between items-center mt-3 gap-4">
+          <button type="button" class="btn-pag-anterioara btn-neon btn-neon-mic btn-neon-secundar" data-carte="tehnic" data-i18n="btnPagAnterioara">Pagina precedentă</button>
+          <span id="indicator-pagini-tehnic" class="text-slate-400 text-sm">1 / 3</span>
+          <button type="button" class="btn-pag-urmatoare btn-neon btn-neon-mic" data-carte="tehnic" data-i18n="btnPagUrmatoare">Pagina următoare</button>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carte 2: Jurnal de Bord (poveste) -->
+  <div id="overlay-jurnal" class="overlay-carte hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80" aria-hidden="true">
+    <div class="carte-wrap carte-jurnal">
+      <header class="carte-antet flex justify-between items-center mb-3 px-1">
+        <h3 class="carte-titlu text-cyan-400 text-sm uppercase tracking-wider" data-i18n="titluJurnal">Jurnal de Bord</h3>
+        <button type="button" class="btn-inchide-carte btn-inchide text-2xl leading-none text-slate-400 hover:text-rosu-neon" data-carte="jurnal" aria-label="Închide">×</button>
+      </header>
+
+      <div id="coperta-jurnal" class="coperta-carte">
+        <figure class="coperta-figura coperta-jurnal-stil">
+          <img src="poze/CopertaJurnal.png" alt="Coperta jurnal" class="coperta-img">
+        </figure>
+        <p class="coperta-hint" data-i18n="hintCoperta">Apasă coperta pentru a deschide cartea</p>
+        <button type="button" id="btn-deschide-jurnal" class="btn-neon btn-neon-mic" data-i18n="btnDeschideJurnal">Deschide jurnalul</button>
+      </div>
+
+      <div id="interior-jurnal" class="interior-carte hidden">
+        <div class="carte-corp-fix carte-corp-jurnal">
+          <article id="pagina-stanga-jurnal" class="pagina-carte pagina-stanga"></article>
+          <article id="pagina-dreapta-jurnal" class="pagina-carte pagina-dreapta"></article>
+        </div>
+        <footer class="carte-footer flex justify-between items-center mt-3 gap-4">
+          <button type="button" class="btn-pag-anterioara btn-neon btn-neon-mic btn-neon-secundar" data-carte="jurnal" data-i18n="btnPagAnterioara">Pagina precedentă</button>
+          <span id="indicator-pagini-jurnal" class="text-slate-400 text-sm">1 / 2</span>
+          <button type="button" class="btn-pag-urmatoare btn-neon btn-neon-mic" data-carte="jurnal" data-i18n="btnPagUrmatoare">Pagina următoare</button>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ecran victorie după misiune reușită -->
+  <div id="overlay-victorie" class="overlay-victorie hidden fixed inset-0 z-[60] flex items-center justify-center p-4" aria-hidden="true">
+    <div class="victorie-panou">
+      <div class="victorie-stele" aria-hidden="true">✦ ✦ ✦</div>
+      <h2 class="victorie-titlu" data-i18n="titluVictorie">Misiune reușită!</h2>
+      <p id="victorie-subtitlu" class="victorie-subtitlu"></p>
+      <p id="victorie-detail" class="victorie-detail"></p>
+      <div class="victorie-butoni">
+        <button type="button" id="btn-victorie-circuit" class="btn-meniu btn-meniu-manual" data-i18n="btnVictorieCircuit">Vezi circuitul rezolvat</button>
+        <button type="button" id="btn-victorie-meniu" class="btn-meniu btn-meniu-setari" data-i18n="btnVictorieMeniu">Meniu principal</button>
+        <button type="button" id="btn-victorie-urmator" class="btn-meniu btn-meniu-misiune hidden" data-i18n="btnVictorieUrmator">Următoarea misiune →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Circuit rezolvat — din ecranul de victorie -->
+  <div id="overlay-circuit-rezolvat" class="overlay-circuit-rezolvat hidden fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/85" aria-hidden="true">
+    <div class="circuit-rezolvat-panou">
+      <header class="circuit-rezolvat-antet">
+        <h3 class="circuit-rezolvat-titlu" data-i18n="titluCircuitRezolvat">Circuit rezolvat</h3>
+        <button type="button" id="btn-inchide-circuit-rezolvat" class="btn-inchide text-2xl leading-none text-slate-400 hover:text-rosu-neon" aria-label="Închide">×</button>
+      </header>
+      <figure class="circuit-rezolvat-cadru">
+        <img id="img-circuit-rezolvat" class="circuit-rezolvat-img" src="" alt="" decoding="async">
+      </figure>
+      <p id="circuit-rezolvat-caption" class="circuit-rezolvat-caption"></p>
     </div>
   </div>
 
