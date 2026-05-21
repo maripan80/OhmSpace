@@ -335,24 +335,324 @@ var missionsData = [
 
 var misiuniOhmSpace = missionsData;
 
+// —— Cărți: format editabil ——
+// Fiecare pagină = o foaie deschisă (coloană stânga + dreapta).
+// Câmpuri: titlu { ro, en }, paragrafe[], capitole[] (cuprins), triunghiOhm, formula.
+
+/**
+ * Alege textul în limba activă (fallback: română).
+ */
+function pickText(obj, lang) {
+  if (!obj) {
+    return "";
+  }
+  if (typeof obj === "string") {
+    return obj;
+  }
+  return obj[lang] != null ? obj[lang] : obj.ro;
+}
+
+/**
+ * Transformă o coloană (definiție) în titlu + HTML pentru randare.
+ */
+function renderBookSide(side, lang) {
+  if (!side) {
+    return { titlu: "", html: "" };
+  }
+  var parts = [];
+  var p, i;
+
+  if (side.capitole) {
+    for (i = 0; i < side.capitole.length; i++) {
+      p = side.capitole[i];
+      parts.push(
+        '<button type="button" class="link-capitol" data-sari-la="' +
+          p.sariLa +
+          '">' +
+          pickText(p.eticheta, lang) +
+          "</button>"
+      );
+    }
+  }
+
+  if (side.formula) {
+    parts.push("<p><strong>" + pickText(side.formula, lang) + "</strong></p>");
+  }
+
+  if (side.triunghiOhm) {
+    parts.push(
+      '<div class="triunghi-ohm"><span class="poz-u">U</span><span class="poz-i">I</span><span class="poz-r">R</span></div>'
+    );
+  }
+
+  if (side.paragrafe) {
+    for (i = 0; i < side.paragrafe.length; i++) {
+      p = side.paragrafe[i];
+      if (p.emphasis) {
+        parts.push("<p><strong>" + pickText(p, lang) + "</strong></p>");
+      } else {
+        parts.push("<p>" + pickText(p, lang) + "</p>");
+      }
+    }
+  }
+
+  return { titlu: pickText(side.titlu, lang), html: parts.join("") };
+}
+
+// —— MANUAL TEHNIC: editează textele de mai jos ——
+
+var manualPageDefs = [
+  {
+    // Pagina 0 — Cuprins
+    stanga: {
+      titlu: { ro: "Cuprins", en: "Contents" },
+      capitole: [
+        { sariLa: 1, eticheta: { ro: "Legea lui Ohm", en: "Ohm's law" } },
+        { sariLa: 2, eticheta: { ro: "Tensiuni în serie", en: "Series voltage" } },
+        { sariLa: 3, eticheta: { ro: "Diodă", en: "Diode" } },
+        { sariLa: 4, eticheta: { ro: "Condensator", en: "Capacitor" } },
+        { sariLa: 5, eticheta: { ro: "Inventar & validare", en: "Inventory & validation" } }
+      ]
+    },
+    dreapta: {
+      titlu: { ro: "Flux circuit", en: "Circuit flow" },
+      paragrafe: [
+        {
+          ro: "Baterie → [SLOT] → Sarcină",
+          en: "Battery → [SLOT] → Load",
+          emphasis: true
+        },
+        {
+          ro: "Montează piesa corectă, apoi apasă «Lansează Curentul».",
+          en: "Place the correct part, then press «Launch Current»."
+        }
+      ]
+    }
+  },
+  {
+    // Pagina 1 — Legea lui Ohm (Misiunea 1)
+    stanga: {
+      titlu: { ro: "Legea lui Ohm", en: "Ohm's law" },
+      formula: { ro: "I = U / R Acopera cu degeul necunoscuta", en: "I = U / R Cover with the finger the unknown value" },
+      triunghiOhm: true,
+      paragrafe: [
+        {
+          ro: "Curentul depinde de tensiune și rezistență.",
+          en: "Current depends on voltage and resistance."
+        }
+      ]
+    },
+    dreapta: {
+      titlu: { ro: "Exemplu — Ventilator", en: "Example — Fan" },
+      paragrafe: [
+        {
+          ro: "Sursă: 24 V. Țintă: 2 A.",
+          en: "Source: 24 V. Target: 2 A."
+        },
+        {
+          ro: "R = U / I = 24 / 2 = 12 Ω",
+          en: "R = U / I = 24 / 2 = 12 Ω",
+          emphasis: true
+        }
+      ]
+    }
+  },
+  {
+    // Pagina 2 — Serie (Misiunea 2)
+    stanga: {
+      titlu: { ro: "Tensiuni în serie", en: "Series voltages" },
+      paragrafe: [
+        {
+          ro: "În serie, tensiunile se adună:",
+          en: "In series, voltages add up:"
+        },
+        {
+          ro: "U_total = U₁ + U₂ + …",
+          en: "U_total = U₁ + U₂ + …",
+          emphasis: true
+        }
+      ]
+    },
+    dreapta: {
+      titlu: { ro: "Exemplu — Grilă 36 V", en: "Example — 36 V grid" },
+      paragrafe: [
+        {
+          ro: "Baterie existentă: 24 V.",
+          en: "Existing battery: 24 V."
+        },
+        {
+          ro: "24 V + 12 V = 36 V",
+          en: "24 V + 12 V = 36 V",
+          emphasis: true
+        }
+      ]
+    }
+  },
+  {
+    // Pagina 3 — Diodă (Misiunea 3)
+    stanga: {
+      titlu: { ro: "Diodă", en: "Diode" },
+      paragrafe: [
+        {
+          ro: "Conduce curent într-un singur sens.",
+          en: "Conducts current in one direction only."
+        },
+        {
+          ro: "Polarizare inversă → circuit deschis, I = 0 A.",
+          en: "Reverse bias → open circuit, I = 0 A.",
+          emphasis: true
+        }
+      ]
+    },
+    dreapta: {
+      titlu: { ro: "Antenă RF", en: "RF antenna" },
+      paragrafe: [
+        {
+          ro: "Dioda → permite transmisia spre exterior.",
+          en: "Diode → allows outward transmission."
+        },
+        {
+          ro: "Blochează feedback-ul electromagnetic.",
+          en: "Blocks electromagnetic feedback."
+        }
+      ]
+    }
+  },
+  {
+    // Pagina 4 — Condensator (Misiunea 4)
+    stanga: {
+      titlu: { ro: "Condensator", en: "Capacitor" },
+      paragrafe: [
+        {
+          ro: "Stochează sarcină electrică.",
+          en: "Stores electric charge."
+        },
+        {
+          ro: "Unitate: Farad (F). Relație: Q = C · U",
+          en: "Unit: Farad (F). Relation: Q = C · U",
+          emphasis: true
+        }
+      ]
+    },
+    dreapta: {
+      titlu: { ro: "Laser — burst", en: "Laser — burst" },
+      paragrafe: [
+        {
+          ro: "Impuls rapid: alege 2,0 F.",
+          en: "Rapid pulse: choose 2.0 F."
+        },
+        {
+          ro: "Capacitate prea mică sau prea mare → laser offline.",
+          en: "Capacity too low or too high → laser offline."
+        }
+      ]
+    }
+  },
+  {
+    // Pagina 5 — Inventar (toate misiunile)
+    stanga: {
+      titlu: { ro: "Inventar", en: "Inventory" },
+      paragrafe: [
+        {
+          ro: "Filtrează după categorie: putere, diode, condensatoare, rezistori.",
+          en: "Filter by category: power, diodes, capacitors, resistors."
+        },
+        {
+          ro: "Trage piesa în [SLOT] sau selecteaz-o și apasă slotul.",
+          en: "Drag a part to [SLOT] or select it and click the slot.",
+          emphasis: true
+        }
+      ]
+    },
+    dreapta: {
+      titlu: { ro: "Validare", en: "Validation" },
+      paragrafe: [
+        {
+          ro: "«Lansează Curentul» verifică soluția.",
+          en: "«Launch Current» checks your solution.",
+          emphasis: true
+        },
+        {
+          ro: "Mesajele explică formula folosită dacă răspunsul e greșit.",
+          en: "Feedback shows the formula used if the answer is wrong."
+        }
+      ]
+    }
+  }
+];
+
+// —— JURNAL: editează textele de mai jos ——
+
+var jurnalPageDefs = [
+  {
+    // Pagina 0
+    stanga: {
+      titlu: { ro: "Ziua 52", en: "Day 52" },
+      paragrafe: [
+        {
+          ro: "Sub-stația principală rulează la 24 V.",
+          en: "Main substation running at 24 V."
+        },
+        {
+          ro: "Am montat releul pentru antenă — urmează testul diodei.",
+          en: "Mounted the antenna relay — diode test next."
+        }
+      ]
+    },
+    dreapta: {
+      titlu: { ro: "Apărare", en: "Defense" },
+      paragrafe: [
+        {
+          ro: "Laserul de proximitate folosește condensatori mari.",
+          en: "Proximity laser uses large capacitors."
+        },
+        {
+          ro: "În vid, un burst e totuși vizibil doar ca flash optic.",
+          en: "In vacuum, a burst is only visible as an optical flash."
+        }
+      ]
+    }
+  },
+  {
+    // Pagina 1
+    stanga: {
+      titlu: { ro: "Notă — Lună", en: "Note — Moon" },
+      paragrafe: [
+        {
+          ro: "Fără atmosferă, descărcarea unui condensator e silențioasă.",
+          en: "Without atmosphere, capacitor discharge is silent."
+        },
+        {
+          ro: "OHM-7 spune că asta e «fizică pură».",
+          en: "OHM-7 calls it «pure physics»."
+        }
+      ]
+    },
+    dreapta: {
+      titlu: { ro: "Proiect", en: "Project" },
+      paragrafe: [
+        {
+          ro: "OhmSpace — simulare Artemis-Prime.",
+          en: "OhmSpace — Artemis-Prime simulation.",
+          emphasis: true
+        },
+        {
+          ro: "InfoEducație — circuite, formule, misiuni.",
+          en: "InfoEducație — circuits, formulas, missions."
+        }
+      ]
+    }
+  }
+];
+
 var manualTehnic = {
   titlu: "Manual Tehnic",
-  totalPagini: 6,
-  pagini: [
-    { id: 0, stanga: { titlu: "Cuprins", html: '<button type="button" class="link-capitol" data-sari-la="1">Ohm</button><button type="button" class="link-capitol" data-sari-la="2">Serie</button><button type="button" class="link-capitol" data-sari-la="3">Diodă</button><button type="button" class="link-capitol" data-sari-la="4">Condensator</button><button type="button" class="link-capitol" data-sari-la="5">Inventar</button>' }, dreapta: { titlu: "Flux", html: "<p>Baterie → <strong>[SLOT]</strong> → Sarcină</p>" } },
-    { id: 1, stanga: { titlu: "Legea lui Ohm", html: "<p><strong>I = U / R</strong></p><div class=\"triunghi-ohm\"><span class=\"poz-u\">U</span><span class=\"poz-i\">I</span><span class=\"poz-r\">R</span></div>" }, dreapta: { titlu: "Exemplu", html: "<p>24 V, 2 A → <strong>R = 12 Ω</strong></p>" } },
-    { id: 2, stanga: { titlu: "Serie", html: "<p>U<sub>total</sub> = U₁ + U₂ + …</p>" }, dreapta: { titlu: "36 V", html: "<p>24 V + 12 V = <strong>36 V</strong></p>" } },
-    { id: 3, stanga: { titlu: "Diodă", html: "<p>Conduce într-un sens · invers = 0 A</p>" }, dreapta: { titlu: "RF", html: "<p>Blochează feedback EM</p>" } },
-    { id: 4, stanga: { titlu: "Condensator", html: "<p>Stochează sarcină · unitate Farad (F)</p>" }, dreapta: { titlu: "Burst", html: "<p>2 F pentru impuls laser</p>" } },
-    { id: 5, stanga: { titlu: "Inventar", html: "<p>Filtre + drag în slot</p>" }, dreapta: { titlu: "Validare", html: "<p><strong>Lansează Curentul</strong></p>" } }
-  ]
+  totalPagini: manualPageDefs.length,
+  pagini: manualPageDefs
 };
 
 var jurnalData = {
   titlu: "Jurnal",
-  totalPagini: 2,
-  pagini: [
-    { id: 0, stanga: { titlu: "Ziua 52", html: "<p>Sub-stație 24 V. Releu antenă.</p>" }, dreapta: { titlu: "Apărare", html: "<p>Laser — condensatori mari.</p>" } },
-    { id: 1, stanga: { titlu: "Lună", html: "<p>În vid, descărcarea condensatorului e silențioasă.</p>" }, dreapta: { titlu: "InfoEducație", html: "<p>OhmSpace — Artemis-Prime</p>" } }
-  ]
+  totalPagini: jurnalPageDefs.length,
+  pagini: jurnalPageDefs
 };

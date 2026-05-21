@@ -1,1748 +1,295 @@
-/* OhmSpace — temă NASA Terminal / Cyberpunk */
+/* OhmSpace — temă + animații (restul: Tailwind) */
 
 :root {
-  --fundal: #0f172a;
-  --text: #e2e8f0;
-  --text-dim: #94a3b8;
-  --cyan-neon: #22d3ee;
-  --verde-neon: #4ade80;
-  --magenta-neon: #e879f9;
-  --rosu-neon: #fb7185;
-  --amber: #fbbf24;
-  --icon-mare: 1.75rem;
-  --icon-hub: 2.75rem;
+  --cyan: #22d3ee;
+  --verde: #4ade80;
+  --rosu: #fb7185;
+  --magenta: #e879f9;
 }
 
-/* Iconițe Lucide — dimensiuni consistente */
-.icon-lucide {
-  width: var(--icon-mare);
-  height: var(--icon-mare);
-  flex-shrink: 0;
-}
+.icon-lucide { width: 1.75rem; height: 1.75rem; flex-shrink: 0; }
+.hidden { display: none !important; }
 
-.icon-inline {
-  width: 1rem;
-  height: 1rem;
-  vertical-align: -0.15em;
-  margin-right: 0.35rem;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  background-color: var(--fundal);
-  color: var(--text);
-  font-family: "Consolas", "Courier New", ui-monospace, monospace;
-}
-
-/* Ecran splash / intro */
-.ecran-splash {
-  background:
-    radial-gradient(ellipse at 50% 20%, rgba(34, 211, 238, 0.1) 0%, transparent 55%),
-    var(--fundal);
-}
-
-/* Make the splash section support a full-size background image */
-.ecran-splash {
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  position: relative;
-  overflow: hidden;
-}
-
-/* subtle dark overlay so text remains readable over bright images */
-.ecran-splash::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(rgba(3,7,18,0.45), rgba(3,7,18,0.25));
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Ensure children are above the overlay */
-.ecran-splash > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* Buton START — splash */
-.btn-start-mare {
-  padding: 1.15rem 4rem;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  letter-spacing: 0.4em;
-  transition:
-    color 0.35s ease,
-    border-color 0.35s ease,
-    box-shadow 0.35s ease,
-    text-shadow 0.35s ease,
-    background 0.35s ease;
-}
-
-.btn-start-mare:hover {
-  color: #67e8f9;
-  border-color: #67e8f9;
-  background: rgba(34, 211, 238, 0.1);
-  box-shadow:
-    0 0 20px rgba(34, 211, 238, 0.55),
-    0 0 40px rgba(34, 211, 238, 0.25);
-  text-shadow:
-    0 0 10px rgba(34, 211, 238, 0.95),
-    0 0 22px rgba(34, 211, 238, 0.55);
-}
-
-/* Nava intro */
-.splash-nava-figura {
-  margin: 0 0 0.25rem;
-  transform: translateY(-1.25rem);
-}
-
-.splash-nava-img {
-  display: block;
-  max-height: min(42vh, 320px);
-  width: auto;
-  margin: 0 auto;
-  object-fit: contain;
-  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
-}
-
-.splash-header {
-  margin-top: -0.5rem;
-}
-
-/* Setări splash — colț dreapta-sus */
-.splash-setari-wrap {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 2;
-}
-
-.btn-splash-setari {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  padding: 0;
-  color: rgba(148, 163, 184, 0.85);
-  background: rgba(15, 23, 42, 0.55);
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-}
-
-.btn-splash-setari:hover,
-.btn-splash-setari[aria-expanded="true"] {
-  color: var(--cyan-neon);
-  border-color: rgba(34, 211, 238, 0.45);
-  box-shadow: 0 0 12px rgba(34, 211, 238, 0.2);
-}
-
-.icon-splash-setari {
-  width: 1.85rem;
-  height: 1.85rem;
-}
-
-.meniu-limba-splash {
-  position: absolute;
-  top: calc(100% + 0.4rem);
-  right: 0;
-  min-width: 9rem;
-  padding: 0.65rem 0.75rem;
-  background: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(34, 211, 238, 0.25);
-  border-radius: 4px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-}
-
-.meniu-limba-titlu {
-  margin: 0 0 0.5rem;
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-dim);
-}
-
-.meniu-limba-optiuni {
-  display: flex;
-  gap: 0.35rem;
-}
-
-.opt-limba {
-  flex: 1;
-  padding: 0.35rem 0.5rem;
-  font-family: inherit;
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  color: var(--text-dim);
-  background: transparent;
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  border-radius: 2px;
-  cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.opt-limba:hover {
-  color: var(--cyan-neon);
-  border-color: rgba(34, 211, 238, 0.45);
-}
-
-.opt-limba.activ {
-  color: var(--cyan-neon);
-  border-color: var(--cyan-neon);
-  box-shadow: 0 0 10px rgba(34, 211, 238, 0.25);
-}
-
-/* Credit InfoEducație — jos pe splash */
-.splash-credit {
-  position: absolute;
-  bottom: 1rem;
-  left: 0;
-  right: 0;
-  margin: 0;
-  text-align: center;
-  font-size: 0.65rem;
-  letter-spacing: 0.06em;
-  color: rgba(148, 163, 184, 0.55);
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* Titlu principal cyberpunk */
+/* Titlu neon */
 .titlu-ohmspace {
-  color: var(--text);
-  text-shadow:
-    0 0 8px var(--cyan-neon),
-    0 0 24px rgba(34, 211, 238, 0.45),
-    0 0 48px rgba(34, 211, 238, 0.2);
-  letter-spacing: 0.15em;
+  text-shadow: 0 0 8px var(--cyan), 0 0 24px rgba(34, 211, 238, 0.4);
+  letter-spacing: 0.12em;
 }
+.text-verde-neon { color: var(--verde); }
 
-.text-verde-neon { color: var(--verde-neon); }
-.text-rosu-neon { color: var(--rosu-neon); }
-.border-rosu-neon { border-color: var(--rosu-neon); }
-
-/* Meniu principal — fundal full-screen + panouri */
-/* Schimbă imaginea de fundal aici (ex: poze/Basa.jpg, poze/background.jpeg) */
-.ecran-meniu {
-  position: relative;
-  background-image: url("poze/background2.jpeg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+/* Splash */
+.ecran-splash { background-size: cover; background-position: center; position: relative; }
+.ecran-splash::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(rgba(3, 7, 18, 0.5), rgba(3, 7, 18, 0.3));
+  pointer-events: none;
 }
+.ecran-splash > * { position: relative; z-index: 1; }
+.splash-setari-wrap { position: absolute; top: 1rem; right: 1rem; z-index: 2; }
+.splash-nava-img { max-height: min(42vh, 320px); margin: 0 auto; display: block; }
+.splash-credit { position: absolute; bottom: 1rem; left: 0; right: 0; text-align: center; font-size: 0.65rem; color: rgba(148, 163, 184, 0.55); }
+.hud-punct { width: 8px; height: 8px; border-radius: 50%; background: var(--verde); box-shadow: 0 0 8px var(--verde); animation: puls-hud 2s ease-in-out infinite; }
+@keyframes puls-hud { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
 
+/* Meniu fundal */
+.ecran-meniu { position: relative; background: url("poze/background2.jpeg") center/cover no-repeat; }
 .ecran-meniu::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(3, 7, 18, 0.78) 0%,
-      rgba(15, 23, 42, 0.65) 45%,
-      rgba(3, 7, 18, 0.85) 100%
-    ),
-    radial-gradient(ellipse at 20% 50%, rgba(34, 211, 238, 0.12) 0%, transparent 50%);
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(3, 7, 18, 0.82), rgba(15, 23, 42, 0.7));
   pointer-events: none;
 }
+.ecran-meniu > * { position: relative; z-index: 1; }
 
-.ecran-meniu::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.03) 2px,
-    rgba(0, 0, 0, 0.03) 4px
-  );
-  pointer-events: none;
-  opacity: 0.6;
-}
-
-.meniu-continut {
-  position: relative;
-  z-index: 1;
-  width: min(96rem, 98vw);
-  min-height: calc(100vh - 2.5rem);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.meniu-layout {
-  align-content: stretch;
-  flex: 1;
-  min-height: min(82vh, 900px);
-}
-
-.titlu-meniu-mare {
-  font-size: clamp(2.5rem, 5vw, 4.25rem);
-  line-height: 1.1;
-}
-
-.meniu-subtitlu {
-  font-size: clamp(0.75rem, 1.2vw, 0.95rem);
-}
-
-.meniu-eticheta-sectiune {
-  font-size: clamp(0.7rem, 1vw, 0.85rem);
-}
-
-.lista-niveluri-meniu {
-  gap: 0.65rem;
-}
-
-/* Panou ghid — astronaut + chat (layout joc) */
-.meniu-ghid {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  padding: clamp(1.25rem, 2.5vw, 2rem);
-  background: rgba(15, 23, 42, 0.5);
-  border-radius: 8px;
-  box-shadow:
-    0 0 0 1px rgba(34, 211, 238, 0.15),
-    0 8px 32px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
-}
-
-.meniu-hud {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-dim);
-}
-
-.hud-punct {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--verde-neon);
-  box-shadow: 0 0 8px var(--verde-neon);
-  animation: puls-hud 2s ease-in-out infinite;
-}
-
-@keyframes puls-hud {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-.meniu-ghid-rand {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-}
-
-.ghid-avatar {
-  margin: 0;
-  flex-shrink: 0;
-}
-
-.ghid-avatar-img {
-  width: min(240px, 22vw);
-  height: auto;
-  max-height: min(340px, 38vh);
-  object-fit: contain;
-  display: block;
-  filter: drop-shadow(0 4px 16px rgba(34, 211, 238, 0.2));
-}
-
-.chat-ghid {
-  flex: 1;
-  min-width: 0;
-  padding: 0.85rem 1rem;
-  background: rgba(2, 6, 23, 0.5);
-  border-radius: 8px;
-  box-shadow: inset 0 0 20px rgba(34, 211, 238, 0.05);
-}
-
-.chat-ghid-nume {
-  display: flex;
-  align-items: center;
-  margin: 0 0 0.6rem;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--cyan-neon);
-}
-
-.chat-ghid-balon {
-  margin: 0;
-  padding: 1rem 1.15rem;
-  font-size: clamp(0.85rem, 1.1vw, 1rem);
-  line-height: 1.6;
-  color: var(--text);
-  background: rgba(30, 41, 59, 0.7);
-  border-radius: 6px 6px 6px 2px;
-  position: relative;
-}
-
-.chat-ghid-balon::before {
-  content: "";
-  position: absolute;
-  left: -6px;
-  top: 12px;
-  width: 0;
-  height: 0;
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
-  border-right: 6px solid rgba(30, 41, 59, 0.7);
-}
-
-/* Panou dreapta — niveluri și butoane */
-.meniu-panou {
-  padding: clamp(1.5rem, 2.5vw, 2.25rem);
-  background: rgba(15, 23, 42, 0.6);
-  border-radius: 8px;
-  box-shadow:
-    0 0 0 1px rgba(148, 163, 184, 0.15),
-    0 8px 32px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(8px);
-}
-
-.meniu-panou .titlu-ohmspace {
-  animation: puls-titlu 4s ease-in-out infinite;
-}
-
-@keyframes puls-titlu {
-  0%, 100% {
-    text-shadow:
-      0 0 8px var(--cyan-neon),
-      0 0 24px rgba(34, 211, 238, 0.45);
-  }
-  50% {
-    text-shadow:
-      0 0 12px var(--cyan-neon),
-      0 0 32px rgba(34, 211, 238, 0.55);
-  }
-}
-
-.btn-cu-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-}
-
-.btn-cu-icon .icon-lucide {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-/* Carduri selectare nivel */
+/* Card nivel */
 .card-nivel {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
-  padding: clamp(0.85rem, 1.5vw, 1.15rem) clamp(1rem, 2vw, 1.35rem);
-  text-align: left;
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  display: flex; align-items: center; gap: 1rem; width: 100%; padding: 0.9rem 1.1rem;
+  text-align: left; background: rgba(30, 41, 59, 0.55); border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 6px; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
 }
+.card-nivel:hover { border-color: rgba(34, 211, 238, 0.5); }
+.card-nivel.activ { border-color: var(--cyan); box-shadow: 0 0 18px rgba(34, 211, 238, 0.28); background: rgba(34, 211, 238, 0.08); }
+.card-nivel.completat .card-nivel-num::after { content: " ✓"; color: var(--verde); }
+.card-nivel-num { font-weight: bold; color: var(--cyan); min-width: 2rem; }
+.card-nivel-titlu { font-size: 0.95rem; display: block; }
+.card-nivel-desc { font-size: 0.8rem; color: #94a3b8; display: block; }
 
-.card-nivel:hover:not(:disabled) {
-  border-color: rgba(34, 211, 238, 0.5);
-}
-
-.card-nivel.activ {
-  border-color: var(--cyan-neon);
-  box-shadow: 0 0 18px rgba(34, 211, 238, 0.28);
-  background: rgba(34, 211, 238, 0.08);
-}
-
-.card-nivel.activ .card-nivel-num {
-  text-shadow: 0 0 10px rgba(34, 211, 238, 0.6);
-}
-
-.card-nivel.blocat,
-.card-nivel:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.card-nivel-num {
-  font-size: clamp(1rem, 1.5vw, 1.2rem);
-  font-weight: bold;
-  color: var(--cyan-neon);
-  min-width: 2.25rem;
-}
-
-.card-nivel-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-}
-
-.card-nivel-titlu {
-  font-size: clamp(0.9rem, 1.25vw, 1.05rem);
-  color: var(--text);
-}
-
-.card-nivel-desc {
-  font-size: clamp(0.75rem, 1vw, 0.85rem);
-  color: var(--text-dim);
-}
-
-.meniu-optiuni .btn-meniu {
-  padding: clamp(0.85rem, 1.5vw, 1rem) 1.5rem;
-  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
-}
-
-/* Butoane neon */
+/* Butoane */
 .btn-neon {
-  padding: 0.75rem 1.75rem;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--cyan-neon);
-  background: transparent;
-  border: 1px solid var(--cyan-neon);
-  border-radius: 2px;
-  cursor: pointer;
-  transition: box-shadow 0.2s, background 0.2s, color 0.2s;
-  box-shadow: 0 0 12px rgba(34, 211, 238, 0.25);
+  padding: 0.65rem 1.5rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--cyan); background: transparent; border: 1px solid var(--cyan); border-radius: 2px;
+  cursor: pointer; box-shadow: 0 0 12px rgba(34, 211, 238, 0.25); transition: background 0.2s, box-shadow 0.2s;
 }
+.btn-neon:hover { background: rgba(34, 211, 238, 0.12); box-shadow: 0 0 20px rgba(34, 211, 238, 0.4); }
+.btn-neon-mic { padding: 0.45rem 1rem; font-size: 0.72rem; }
+.btn-neon-secundar { color: #94a3b8; border-color: rgba(148, 163, 184, 0.45); box-shadow: none; }
+.btn-start-mare { padding: 1rem 3.5rem; font-size: 1.1rem; letter-spacing: 0.35em; }
+.btn-meniu { padding: 0.75rem 1.25rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; border-radius: 4px; border: 1px solid transparent; cursor: pointer; width: 100%; }
+.btn-meniu-misiune { color: #042f2e; background: linear-gradient(180deg, #5eead4, #0d9488); border-color: #2dd4bf; }
+.btn-meniu-manual { color: #422006; background: linear-gradient(180deg, #fde68a, #d97706); border-color: #fbbf24; }
+.btn-meniu-jurnal { color: #3b0764; background: linear-gradient(180deg, #e9d5ff, #9333ea); border-color: #d8b4fe; }
+.btn-meniu-setari { color: #e2e8f0; background: linear-gradient(180deg, #475569, #1e293b); border-color: #64748b; }
 
-.btn-neon:hover {
-  background: rgba(34, 211, 238, 0.12);
-  box-shadow: 0 0 20px rgba(34, 211, 238, 0.45);
-}
-
-.btn-neon-secundar {
-  color: var(--text-dim);
-  border-color: rgba(148, 163, 184, 0.5);
-  box-shadow: none;
-}
-
-.btn-neon-secundar:hover {
-  color: var(--text);
-  border-color: var(--text-dim);
-  background: rgba(148, 163, 184, 0.08);
-}
-
-.btn-neon-mic {
-  padding: 0.45rem 1rem;
-  font-size: 0.7rem;
-}
-
-.btn-neon:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.panou-setari {
-  background: rgba(15, 23, 42, 0.9);
-  box-shadow: 0 0 24px rgba(34, 211, 238, 0.1);
-}
-
-.select-limba:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.4);
-}
-
-/* Carduri hub */
+/* Hub */
 .card-hub {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 2rem 1.5rem;
-  text-align: center;
-  background: rgba(30, 41, 59, 0.6);
-  border: 1px solid rgba(34, 211, 238, 0.25);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 2rem 1.5rem;
+  background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(148, 163, 184, 0.25); border-radius: 8px;
+  cursor: pointer; transition: border-color 0.2s, transform 0.15s;
 }
+.card-hub:hover { border-color: var(--cyan); transform: translateY(-2px); }
+.card-hub-icon { width: 2.75rem; height: 2.75rem; color: var(--cyan); }
+.card-hub-titlu { font-size: 1rem; font-weight: bold; }
+.card-hub-desc { font-size: 0.8rem; color: #94a3b8; text-align: center; }
 
-.card-hub:hover {
-  border-color: var(--cyan-neon);
-  box-shadow: 0 0 28px rgba(34, 211, 238, 0.2);
-  transform: translateY(-2px);
-}
-
-.card-hub-icon {
-  width: var(--icon-hub);
-  height: var(--icon-hub);
-  color: var(--cyan-neon);
-}
-
-.card-hub-titlu {
-  font-size: 1rem;
-  color: var(--cyan-neon);
-  font-weight: bold;
-  letter-spacing: 0.05em;
-}
-
-.card-hub-desc {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-}
-
-/* Panouri SF */
+/* Panou misiune */
 .panou-sf {
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 4px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 8px; backdrop-filter: blur(6px);
 }
+.linie-neon { width: 2.5rem; height: 3px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); box-shadow: 0 0 8px var(--cyan); }
+.linie-sageata::after { content: "▶"; margin-left: 2px; font-size: 0.5rem; color: var(--cyan); vertical-align: middle; }
 
-/* Panou radio — misiune (walkie + mesaj) */
-.panou-comms {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  padding: 1rem;
-  height: 100%;
-}
-
-.comms-antet {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  flex-wrap: wrap;
-}
-
-.comms-eticheta {
-  flex: 1;
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--cyan-neon);
-}
-
-.comms-live {
-  font-size: 0.6rem;
-  font-weight: bold;
-  letter-spacing: 0.15em;
-  color: var(--rosu-neon);
-  padding: 0.15rem 0.4rem;
-  border: 1px solid rgba(251, 113, 133, 0.5);
-  border-radius: 2px;
-  animation: puls-live 1.5s ease-in-out infinite;
-}
-
-@keyframes puls-live {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-
-.comms-walkie {
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  padding: 0.5rem 0;
-}
-
-.comms-walkie-img {
-  width: 100%;
-  max-width: 160px;
-  height: auto;
-  max-height: 140px;
-  object-fit: contain;
-  object-position: center;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
-}
-
-.comms-mesaj {
-  flex: 1;
-  margin: 0;
-  padding: 0.9rem 1rem;
-  font-size: 0.8rem;
-  line-height: 1.6;
-  color: var(--text);
-  background: rgba(30, 41, 59, 0.85);
-  border-radius: 6px;
-  border-left: 3px solid var(--rosu-neon);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  min-height: 5rem;
-  max-height: 280px;
-  overflow-y: auto;
-}
-
-/* Linii neon în schemă */
-.linie-neon {
-  display: block;
-  background: linear-gradient(90deg, transparent, var(--cyan-neon), transparent);
-  box-shadow: 0 0 8px var(--cyan-neon);
-}
-
-.linie-oriz {
-  width: 2.5rem;
-  height: 3px;
-  min-width: 24px;
-}
-
-.linie-sageata {
-  position: relative;
-}
-
-.linie-sageata::after {
-  content: "▶";
-  position: absolute;
-  right: -6px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.5rem;
-  color: var(--cyan-neon);
-}
-
-.schema-rand-oriz {
-  min-width: 280px;
-}
-
-/* Panou circuit misiune + diagramă IRL */
-.panou-circuit-misiune {
-  gap: 0;
-}
-
-.zona-diagrama-circuit {
-  margin-top: 0.75rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(148, 163, 184, 0.22);
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.diagrama-circuit-titlu {
-  margin: 0 0 0.5rem;
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--text-dim);
-}
-
-.diagrama-circuit-cadru {
-  position: relative;
-  flex: 1;
-  min-height: min(22vh, 200px);
-  max-height: min(32vh, 280px);
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(2, 6, 23, 0.55);
-  border: 1px dashed rgba(34, 211, 238, 0.35);
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.diagrama-circuit-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  padding: 0.5rem;
-  display: block;
-}
-
-.diagrama-circuit-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 1.25rem 1.5rem;
-  text-align: center;
-  color: var(--text-dim);
-}
-
-.diagrama-circuit-placeholder.hidden {
-  display: none;
-}
-
-.diagrama-placeholder-icon {
-  width: 2rem;
-  height: 2rem;
-  opacity: 0.45;
-  color: var(--cyan-neon);
-}
-
-.diagrama-placeholder-msg {
-  margin: 0;
-  font-size: 0.78rem;
-  line-height: 1.45;
-  max-width: 28rem;
-}
-
-.diagrama-placeholder-cale {
-  font-size: 0.72rem;
-  color: var(--cyan-neon);
-  background: rgba(15, 23, 42, 0.8);
-  padding: 0.25rem 0.5rem;
-  border-radius: 3px;
-  border: 1px solid rgba(34, 211, 238, 0.25);
-}
-
-.diagrama-circuit-caption {
-  margin: 0.45rem 0 0;
-  font-size: 0.72rem;
-  line-height: 1.4;
-  color: var(--text-dim);
-  text-align: center;
-}
-
-/* Potențiometru — slider sub schema */
-.panou-potentiometru {
-  margin-top: 0.5rem;
-  padding: 0.85rem 1rem;
-  background: rgba(2, 6, 23, 0.55);
-  border: 1px solid rgba(251, 191, 36, 0.35);
-  border-radius: 6px;
-}
-
-.panou-potentiometru.hidden {
-  display: none;
-}
-
-.potentiometru-label {
-  display: block;
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--amber);
-  margin-bottom: 0.35rem;
-}
-
-.potentiometer-slider {
-  width: 100%;
-  margin-top: 0.35rem;
-  accent-color: var(--cyan-neon);
-  cursor: pointer;
-}
-
-.potentiometru-valoare-live {
-  margin: 0.5rem 0 0;
-  font-size: 0.85rem;
-  font-weight: bold;
-  color: var(--cyan-neon);
-  text-align: center;
-  text-shadow: 0 0 10px rgba(34, 211, 238, 0.35);
-}
-
-.slot-gol.slot-potentiometru {
-  min-width: 6.5rem;
-}
-
-.piesa-inventar.hidden-misiune {
-  display: none !important;
-}
-
-/* Sera LED — succes misiune 5 */
-.tinta-sera-led.activ {
-  border-radius: 4px;
-  box-shadow: 0 0 22px rgba(74, 222, 128, 0.5);
-}
-
-#svg-sera-led.sera-led-activ .led-bec {
-  fill: #4ade80;
-  stroke: #86efac;
-  filter: drop-shadow(0 0 6px rgba(74, 222, 128, 0.9));
-  animation: puls-led-sera 1.2s ease-in-out infinite;
-}
-
-@keyframes puls-led-sera {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.75; }
-}
-
-/* Ținte misiune — animații succes */
-.tinta-grid.activ {
-  box-shadow: 0 0 24px rgba(74, 222, 128, 0.45);
-  border-radius: 4px;
-}
-
-#svg-grid.grid-activ {
-  filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.8));
-}
-
-.tinta-antena.activ {
-  box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
-  border-radius: 4px;
-}
-
-.tinta-laser.activ {
-  border-radius: 4px;
-}
-
-.tinta-laser.flash-laser {
-  animation: flash-laser 0.55s ease-out 2;
-}
-
-#svg-laser.laser-activ line,
-#svg-laser.laser-activ polygon {
-  filter: drop-shadow(0 0 8px #f43f5e);
-}
-
-@keyframes flash-laser {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(2.2) drop-shadow(0 0 20px #f43f5e); }
-}
-
-/* Inventar — filtre & selecție */
-.filtru-inventar.activ {
-  color: var(--cyan-neon);
-  border-color: var(--cyan-neon);
-  background: rgba(34, 211, 238, 0.12);
-}
-
-.piesa-inventar.hidden {
-  display: none !important;
-}
-
-button.piesa-inventar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: inherit;
-  cursor: pointer;
-  padding: 0.5rem 0.65rem;
-  color: var(--text);
-  background: rgba(51, 65, 85, 0.5);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  border-radius: 3px;
-}
-
-.piesa-inventar.piesa-selectata {
-  border-color: var(--verde-neon);
-  box-shadow: 0 0 14px rgba(74, 222, 128, 0.35);
-}
-
-.slot-conectare.slot-tinta {
-  border-color: #fbbf24;
-  box-shadow: 0 0 16px rgba(251, 191, 36, 0.35);
-}
-
-/* Sprite-uri componente */
-.sprite-wrap,
-.sprite-inventar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.svg-piesa {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-
-.piesa-inventar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  min-width: 5.5rem;
-}
-
-.piesa-inventar .eticheta-piesa {
-  font-size: 0.7rem;
-}
-
-.piesa-schema .sprite-wrap {
-  min-height: 48px;
-}
-
-.continut-slot {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 40px;
-}
-
-.text-slot-label {
-  font-size: 0.65rem;
-  font-weight: bold;
-  letter-spacing: 0.08em;
-  color: var(--cyan-neon);
-}
-
-/* Slot gol — pulsare */
+/* Slot */
 .slot-gol {
-  min-width: 5.5rem;
-  min-height: 4.5rem;
-  padding: 0.5rem 0.65rem;
-  background: rgba(34, 211, 238, 0.06);
-  border: 2px dashed var(--cyan-neon);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.2s, border-style 0.2s;
+  min-width: 5.5rem; min-height: 4.5rem; padding: 0.5rem; border: 2px dashed var(--cyan);
+  border-radius: 6px; cursor: pointer; background: rgba(34, 211, 238, 0.06); transition: box-shadow 0.2s, border-color 0.2s;
 }
+.slot-gol.montat { border-style: solid; border-color: var(--verde); background: rgba(74, 222, 128, 0.1); animation: none; }
+.slot-gol.slot-hover, .slot-gol.slot-tinta { border-color: #fbbf24; box-shadow: 0 0 18px rgba(251, 191, 36, 0.35); }
+.pulse-anim { animation: puls-slot 1.8s ease-in-out infinite; }
+@keyframes puls-slot { 0%, 100% { box-shadow: 0 0 8px rgba(34, 211, 238, 0.3); } 50% { box-shadow: 0 0 20px rgba(34, 211, 238, 0.55); } }
 
-.slot-gol:hover {
-  background: rgba(34, 211, 238, 0.14);
+/* Inventar */
+button.piesa-inventar {
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem; padding: 0.5rem;
+  background: rgba(51, 65, 85, 0.5); border: 1px solid rgba(148, 163, 184, 0.35); border-radius: 4px;
+  cursor: grab; font-family: inherit; color: inherit; font-size: 0.7rem;
 }
+.piesa-inventar.piesa-selectata { border-color: var(--verde); box-shadow: 0 0 12px rgba(74, 222, 128, 0.35); }
+.piesa-inventar.trage-piesa { opacity: 0.55; cursor: grabbing; }
+.filtru-inventar.activ { color: var(--cyan); border-color: var(--cyan) !important; background: rgba(34, 211, 238, 0.12); }
 
-.slot-gol.slot-hover {
-  background: rgba(34, 211, 238, 0.22);
-  border-color: var(--verde-neon);
-  box-shadow: 0 0 24px rgba(74, 222, 128, 0.35);
-}
+/* Mesaje pedagogice */
+.mesaj-rezultat.succes { color: var(--verde); }
+.mesaj-rezultat.eroare-supra { color: var(--magenta); }
+.mesaj-rezultat.eroare-sub { color: var(--rosu); }
 
-.slot-gol.slot-tinta {
-  border-color: #fbbf24;
-  box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
-}
-
-.slot-gol.montat {
-  border-style: solid;
-  background: rgba(74, 222, 128, 0.1);
-  border-color: var(--verde-neon);
-  color: var(--verde-neon);
-  animation: none;
-}
-
-.pulse-anim {
-  animation: puls-slot 1.8s ease-in-out infinite;
-}
-
-@keyframes puls-slot {
-  0%, 100% {
-    box-shadow: 0 0 8px rgba(34, 211, 238, 0.3);
-    opacity: 1;
-  }
-  50% {
-    box-shadow: 0 0 22px rgba(34, 211, 238, 0.65);
-    opacity: 0.85;
-  }
-}
-
-/* Ventilator — palete + rotație */
-.svg-ventilator {
-  display: block;
-}
-
-.tinta-ventilator .sprite-wrap {
-  min-height: 64px;
-  min-width: 64px;
-}
-
-.tinta-ventilator.activ {
-  border-radius: 6px;
-  box-shadow: 0 0 24px rgba(74, 222, 128, 0.45);
-}
-
+/* Animații ținte */
 #svg-ventilator.rotate-anim .grup-elice {
-  transform-origin: 32px 32px;
-  transform-box: fill-box;
+  transform-origin: 32px 32px; transform-box: fill-box;
   animation: rotatie-elice 0.35s linear infinite;
 }
-
-#svg-ventilator.rotate-anim .grup-elice path {
-  filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.8));
-}
-
-@keyframes rotatie-elice {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* Piese inventar — drag & drop */
-.piesa-inventar {
-  padding: 0.5rem 0.65rem;
-  color: var(--text);
-  background: rgba(51, 65, 85, 0.5);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  border-radius: 3px;
-  cursor: grab;
-  user-select: none;
-  transition: border-color 0.15s, box-shadow 0.15s, opacity 0.15s;
-}
-
-.piesa-inventar:hover {
-  border-color: var(--cyan-neon);
-}
-
-.piesa-inventar.trage-piesa {
-  opacity: 0.55;
-  cursor: grabbing;
-  border-color: var(--cyan-neon);
-  box-shadow: 0 0 16px rgba(34, 211, 238, 0.35);
-}
-
-.piesa-inventar:active {
-  cursor: grabbing;
-}
-
-/* Mesaje rezultat */
-.mesaj-rezultat.succes {
-  color: var(--verde-neon);
-  text-shadow: 0 0 12px rgba(74, 222, 128, 0.4);
-}
-
-.mesaj-rezultat.eroare-supra {
-  color: var(--magenta-neon);
-  text-shadow: 0 0 12px rgba(232, 121, 249, 0.4);
-}
-
-.mesaj-rezultat.eroare-sub {
-  color: var(--rosu-neon);
-}
+@keyframes rotatie-elice { to { transform: rotate(360deg); } }
+.tinta-ventilator.activ, .tinta-grid.activ, .tinta-antena.activ { box-shadow: 0 0 22px rgba(74, 222, 128, 0.45); border-radius: 6px; }
+#svg-grid.grid-activ { filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.8)); }
+.tinta-laser.flash-laser { animation: flash-laser 0.55s ease-out 2; }
+#svg-laser.laser-activ line, #svg-laser.laser-activ polygon { filter: drop-shadow(0 0 8px #f43f5e); }
+@keyframes flash-laser { 50% { filter: brightness(2); } }
+#svg-sera-led.sera-led-activ .led-bec { fill: #4ade80; filter: drop-shadow(0 0 6px #4ade80); animation: puls-led 1.2s ease-in-out infinite; }
+@keyframes puls-led { 50% { opacity: 0.7; } }
 
 /* Scratchpad */
-/* Butoane meniu — culori distincte */
-.btn-meniu {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  padding: 0.75rem 1.75rem;
-  font-family: inherit;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  border-radius: 3px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
-}
-
-.btn-meniu:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.08);
-}
-
-.btn-meniu-misiune {
-  color: #042f2e;
-  background: linear-gradient(180deg, #5eead4 0%, #14b8a6 45%, #0d9488 100%);
-  border-color: #2dd4bf;
-  box-shadow: 0 0 18px rgba(45, 212, 191, 0.35);
-}
-
-.btn-meniu-manual {
-  color: #422006;
-  background: linear-gradient(180deg, #fde68a 0%, #f59e0b 50%, #d97706 100%);
-  border-color: #fbbf24;
-  box-shadow: 0 0 14px rgba(251, 191, 36, 0.25);
-}
-
-.btn-meniu-jurnal {
-  color: #3b0764;
-  background: linear-gradient(180deg, #e9d5ff 0%, #c084fc 50%, #9333ea 100%);
-  border-color: #d8b4fe;
-  box-shadow: 0 0 14px rgba(192, 132, 252, 0.28);
-}
-
-.btn-meniu-setari {
-  color: var(--text);
-  background: linear-gradient(180deg, #475569 0%, #334155 55%, #1e293b 100%);
-  border-color: #64748b;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
-}
-
-/* Caiet desen — canvas */
-.panou-desen {
-  min-height: 220px;
-}
-
-.desen-antet {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.desen-unelte {
-  display: flex;
-  gap: 0.25rem;
-}
-
+.desen-canvas-wrap { background: #0c1222; border: 1px solid rgba(34, 211, 238, 0.2); border-radius: 4px; touch-action: none; }
+.scratchpad-canvas { background: #0c1222; cursor: crosshair; }
 .unealta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
-  color: var(--text-dim);
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  border-radius: 3px;
-  cursor: pointer;
+  width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center;
+  background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(148, 163, 184, 0.3); border-radius: 3px; cursor: pointer; color: #94a3b8;
+}
+.unealta.activ { color: var(--cyan); border-color: var(--cyan); }
+
+/* Overlay victorie */
+.overlay-victorie:not(.hidden) { display: flex !important; background: rgba(0, 0, 0, 0.75); }
+/* Dosare manual + jurnal — estetică Papers, Please */
+.overlay-manual-dosar:not(.hidden) { display: flex !important; }
+
+#overlay-manual-tehnic .manual-foaie,
+#overlay-jurnal .manual-foaie {
+  background-image: linear-gradient(180deg, #f0ead6 0%, #e8e2d4 100%);
 }
 
-.unealta .icon-lucide {
-  width: 1rem;
-  height: 1rem;
-}
-
-.unealta.activ {
-  color: var(--cyan-neon);
-  border-color: var(--cyan-neon);
-  background: rgba(34, 211, 238, 0.12);
-}
-
-.desen-canvas-wrap {
-  flex: 1;
-  min-height: 220px;
-  height: 220px;
-  border: 1px solid rgba(34, 211, 238, 0.2);
-  border-radius: 4px;
-  background: #0c1222;
-  overflow: hidden;
-  touch-action: none;
-}
-
-.scratchpad-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  cursor: crosshair;
-  background: #0c1222;
-}
-
-.desen-hint {
-  margin: 0.4rem 0 0;
-}
-
-/* Puzzle nivel 2 — KCL */
-.puzzle-kcl-regula {
-  font-size: 0.75rem;
-  color: var(--cyan-neon);
-  margin: 0 0 1rem;
-  text-align: center;
-}
-
-.nod-vizual {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 0;
-}
-
-.nod-intrare {
-  text-align: center;
-  padding: 0.65rem 1.25rem;
-  background: rgba(251, 191, 36, 0.12);
-  border: 1px solid rgba(251, 191, 36, 0.4);
-  border-radius: 4px;
-}
-
-.nod-valoare.fix {
-  display: block;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--amber);
-}
-
-.nod-centru {
+#overlay-manual-tehnic .manual-inchide,
+#overlay-jurnal .manual-inchide {
+  width: 2.75rem;
+  height: 2.75rem;
   font-size: 2rem;
-  color: var(--cyan-neon);
-  text-shadow: 0 0 16px rgba(34, 211, 238, 0.5);
-}
-
-.nod-iesiri {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  width: 100%;
-}
-
-.ramura-kcl {
-  flex: 1;
-  min-width: 140px;
-  padding: 0.85rem;
-  background: rgba(30, 41, 59, 0.6);
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  border-radius: 6px;
-  text-align: center;
-}
-
-.ramura-controale {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
-  margin: 0.5rem 0;
-}
-
-.btn-step {
-  width: 2rem;
-  height: 2rem;
-  font-size: 1.1rem;
-  font-family: inherit;
-  color: var(--cyan-neon);
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(34, 211, 238, 0.4);
-  border-radius: 3px;
+  line-height: 1;
+  font-weight: 700;
+  color: #1a1a1a;
+  background: transparent;
+  border: 2px solid #2b2b2b;
   cursor: pointer;
+  font-family: "Courier New", Courier, monospace;
+  transition: background 0.12s;
+}
+#overlay-manual-tehnic .manual-inchide:hover,
+#overlay-jurnal .manual-inchide:hover {
+  background: rgba(0, 0, 0, 0.08);
 }
 
-.curent-afisat {
-  font-size: 1.35rem;
-  font-weight: bold;
-  min-width: 1.5rem;
-  color: var(--text);
-}
-
-.ramura-tinta {
-  font-size: 0.65rem;
-  color: var(--text-dim);
-}
-
-.nod-suma {
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--text-dim);
-}
-
-/* Puzzle nivel 3 — echivalentă */
-.puzzle-desc {
-  font-size: 0.82rem;
-  line-height: 1.55;
-  margin-bottom: 1rem;
-}
-
-.schema-mixt {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  font-size: 0.75rem;
-  background: rgba(2, 6, 23, 0.5);
-  border-radius: 4px;
-}
-
-.mixt-baterie {
-  color: var(--amber);
-  padding: 0.35rem 0.6rem;
-  border: 1px solid rgba(251, 191, 36, 0.5);
-}
-
-.mixt-r1,
-.mixt-paralel {
-  color: var(--cyan-neon);
-  padding: 0.35rem 0.6rem;
-  border: 1px solid rgba(34, 211, 238, 0.35);
-}
-
-.grila-optiuni {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.65rem;
-}
-
-.opt-rez {
-  padding: 1rem;
-  font-family: inherit;
-  font-size: 1rem;
-  font-weight: bold;
-  color: var(--text);
-  background: rgba(30, 41, 59, 0.7);
-  border: 2px solid rgba(148, 163, 184, 0.3);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.opt-rez:hover {
-  border-color: rgba(34, 211, 238, 0.5);
-}
-
-.opt-rez.activ {
-  border-color: var(--verde-neon);
-  box-shadow: 0 0 16px rgba(74, 222, 128, 0.25);
-  background: rgba(74, 222, 128, 0.08);
-}
-
-/* Ecran victorie */
-.overlay-victorie:not(.hidden) {
-  display: flex !important;
-  background: rgba(2, 6, 23, 0.92);
-}
-
-.victorie-panou {
-  text-align: center;
-  max-width: 420px;
-  padding: 2.5rem 2rem;
-  background: linear-gradient(160deg, rgba(15, 23, 42, 0.95) 0%, rgba(3, 7, 18, 0.98) 100%);
-  border: 1px solid rgba(34, 211, 238, 0.35);
-  border-radius: 8px;
-  box-shadow:
-    0 0 40px rgba(34, 211, 238, 0.2),
-    0 20px 50px rgba(0, 0, 0, 0.5);
-  animation: victorie-in 0.5s ease-out;
-}
-
-@keyframes victorie-in {
-  from {
-    opacity: 0;
-    transform: scale(0.92) translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-.victorie-stele {
-  font-size: 1.25rem;
-  letter-spacing: 0.5em;
-  color: var(--amber);
-  margin-bottom: 0.75rem;
-  animation: victorie-stele 2s ease-in-out infinite;
-}
-
-@keyframes victorie-stele {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-.victorie-titlu {
-  margin: 0 0 0.5rem;
-  font-size: 1.5rem;
-  color: var(--verde-neon);
-  text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
+#overlay-manual-tehnic .manual-titlu-stamp,
+#overlay-manual-tehnic .manual-pagina h4,
+#overlay-jurnal .manual-titlu-stamp,
+#overlay-jurnal .manual-pagina h4 {
+  font-family: "Courier New", Courier, monospace;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-}
-
-.victorie-subtitlu {
-  margin: 0 0 0.35rem;
-  font-size: 1rem;
-  color: var(--cyan-neon);
-}
-
-.victorie-detail {
-  margin: 0 0 1.5rem;
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  line-height: 1.5;
-}
-
-.victorie-butoni {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-/* Overlay circuit rezolvat */
-.overlay-circuit-rezolvat:not(.hidden) {
-  display: flex !important;
-}
-
-.circuit-rezolvat-panou {
-  width: min(1280px, 98vw);
-  max-height: 96vh;
-  padding: 1.25rem 1.5rem 1.5rem;
-  background: rgba(15, 23, 42, 0.97);
-  border: 1px solid rgba(34, 211, 238, 0.35);
-  border-radius: 8px;
-  box-shadow: 0 0 40px rgba(34, 211, 238, 0.15);
-  overflow: auto;
-}
-
-.circuit-rezolvat-antet {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  color: #1a1a1a;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  padding-bottom: 0.35rem;
   margin-bottom: 0.75rem;
 }
 
-.circuit-rezolvat-titlu {
-  margin: 0;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--cyan-neon);
-}
-
-.circuit-rezolvat-cadru {
-  margin: 0;
-  padding: 0.75rem;
-  background: rgba(2, 6, 23, 0.6);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 6px;
-  text-align: center;
-  min-height: min(75vh, 820px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.circuit-rezolvat-img {
-  display: block;
-  max-width: 100%;
-  max-height: min(88vh, 960px);
-  width: auto;
-  height: auto;
-  margin: 0 auto;
-  object-fit: contain;
-}
-
-.circuit-rezolvat-caption {
-  margin: 0.65rem 0 0;
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  text-align: center;
-}
-
-.card-nivel.completat .card-nivel-num::after {
-  content: " ✓";
-  color: var(--verde-neon);
-}
-
-/* Overlay cărți — manual tehnic + jurnal */
-.overlay-carte:not(.hidden) {
-  display: flex !important;
-}
-
-.carte-wrap {
-  width: min(1000px, 96vw);
-  filter: drop-shadow(0 12px 40px rgba(0, 0, 0, 0.6));
-}
-
-/* Copertă — se întoarce la deschidere */
-.coperta-carte {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  transition: opacity 0.35s ease, transform 0.45s ease;
-  transform-origin: left center;
-}
-
-.coperta-carte.ascuns {
-  opacity: 0;
-  transform: perspective(800px) rotateY(-88deg);
-  pointer-events: none;
-  position: absolute;
-  width: 100%;
-}
-
-.coperta-figura {
-  margin: 0 auto;
-  width: min(520px, 88vw);
-  cursor: pointer;
-  transition: transform 0.25s ease, filter 0.25s ease;
-}
-
-.coperta-figura:hover {
-  transform: scale(1.02);
-  filter: drop-shadow(0 12px 36px rgba(0, 0, 0, 0.55));
-}
-
-.coperta-jurnal-stil:hover {
-  filter: drop-shadow(0 12px 36px rgba(124, 58, 237, 0.25));
-}
-
-.coperta-img {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: min(72vh, 640px);
-  object-fit: contain;
-  border-radius: 4px;
-}
-
-.coperta-hint {
-  margin: 0;
-  font-size: 0.65rem;
-  color: var(--text-dim);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-/* Interior carte — înălțime fixă, scroll în pagini */
-.interior-carte {
-  width: 100%;
-}
-
-.carte-corp-fix {
-  display: flex;
-  width: 100%;
-  height: min(560px, 70vh);
-  border-radius: 6px;
-  background: rgba(254, 243, 199, 0.98);
-  color: #0f172a;
-  overflow: hidden;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-}
-
-.carte-corp-jurnal {
-  background: rgba(250, 245, 255, 0.98);
-}
-
-.pagina-carte {
-  flex: 1;
-  min-width: 0;
-  height: 100%;
-  padding: 1.25rem 1.5rem;
-  overflow-y: auto;
-  font-family: "Georgia", "Times New Roman", serif;
-  font-size: 0.88rem;
+#overlay-manual-tehnic .manual-pagina,
+#overlay-manual-tehnic .manual-pagina p,
+#overlay-manual-tehnic .manual-pagina strong,
+#overlay-manual-tehnic .manual-pagina sub,
+#overlay-jurnal .manual-pagina,
+#overlay-jurnal .manual-pagina p,
+#overlay-jurnal .manual-pagina strong,
+#overlay-jurnal .manual-pagina sub {
+  color: #1a1a1a;
+  font-family: "Courier New", Courier, monospace;
   line-height: 1.55;
 }
 
-.pagina-stanga {
-  border-right: 2px solid rgba(71, 85, 105, 0.35);
+#overlay-manual-tehnic .manual-pagina strong,
+#overlay-jurnal .manual-pagina strong {
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
-.pagina-carte h4 {
-  font-family: inherit;
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.2);
-  padding-bottom: 0.35rem;
+#overlay-manual-tehnic .manual-btn,
+#overlay-jurnal .manual-btn {
+  padding: 0.55rem 1.25rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #1a1a1a;
+  background: #e2dcd0;
+  border: 2px solid #2b2b2b;
+  cursor: pointer;
+  font-family: "Courier New", Courier, monospace;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
+}
+#overlay-manual-tehnic .manual-btn:hover,
+#overlay-jurnal .manual-btn:hover {
+  background: #d8d0c4;
+}
+#overlay-manual-tehnic .manual-btn:disabled,
+#overlay-jurnal .manual-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
-.pagina-carte .link-capitol {
+#overlay-manual-tehnic .manual-coperta-img,
+#overlay-jurnal .manual-coperta-img {
+  filter: grayscale(0.35) contrast(1.15);
+}
+
+#overlay-manual-tehnic .triunghi-ohm {
+  width: 120px;
+  height: 100px;
+  margin: 1rem auto;
+  position: relative;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  background: #e2dcd0;
+  border: 2px solid #1a1a1a;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+#overlay-manual-tehnic .triunghi-ohm span {
+  position: absolute;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #1a1a1a;
+}
+#overlay-manual-tehnic .triunghi-ohm .poz-u { top: 18%; left: 50%; transform: translateX(-50%); }
+#overlay-manual-tehnic .triunghi-ohm .poz-i { bottom: 15%; left: 22%; }
+#overlay-manual-tehnic .triunghi-ohm .poz-r { bottom: 15%; right: 22%; }
+
+#overlay-manual-tehnic .link-capitol {
   display: block;
   width: 100%;
   text-align: left;
   padding: 0.4rem 0;
-  margin: 0.2rem 0;
-  color: #0e7490;
+  padding-left: 0.5rem;
   background: none;
   border: none;
-  border-bottom: 1px dotted rgba(15, 23, 42, 0.15);
+  border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+  color: #1a1a1a;
   cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
-}
-
-.pagina-carte .link-capitol:hover {
-  color: #155e75;
-  background: rgba(34, 211, 238, 0.08);
-}
-
-/* Triunghi formule Ohm */
-.triunghi-ohm {
-  width: 140px;
-  height: 120px;
-  margin: 1rem auto;
-  position: relative;
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%);
-  border: 2px solid #92400e;
-}
-
-.triunghi-ohm span {
-  position: absolute;
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: #1e293b;
-}
-
-.triunghi-ohm .poz-u { top: 12%; left: 50%; transform: translateX(-50%); }
-.triunghi-ohm .poz-i { bottom: 18%; left: 22%; }
-.triunghi-ohm .poz-r { bottom: 18%; right: 22%; }
-
-/* Scheme Kirchhoff simplificate */
-.schema-kirch {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
-  margin: 0.75rem 0;
-  font-size: 0.75rem;
-  font-family: ui-monospace, monospace;
-}
-
-.schema-kirch .nod {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #0e7490;
-}
-
-.schema-kirch .fir {
-  height: 2px;
-  width: 28px;
-  background: #334155;
-}
-
-/* Casete FUN FACT */
-.caseta-fun-fact {
-  margin-top: 1rem;
-  padding: 0.85rem 1rem;
-  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
-  color: #e0e7ff;
-  border-left: 4px solid var(--cyan-neon);
-  border-radius: 0 6px 6px 0;
-  font-size: 0.82rem;
-}
-
-.caseta-fun-fact strong {
-  display: block;
-  color: var(--cyan-neon);
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  margin-bottom: 0.4rem;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.85rem;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+#overlay-manual-tehnic .link-capitol:hover {
+  background: rgba(0, 0, 0, 0.06);
+  text-decoration: none;
 }
 
-.btn-inchide {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.25rem 0.5rem;
+/* Jurnal: aceleași reguli tipografice ca manualul (fără triunghi/linkuri) */
+#overlay-jurnal .manual-antet,
+#overlay-jurnal .manual-footer,
+#overlay-jurnal .manual-hint-coperta,
+#overlay-jurnal .manual-indicator,
+#overlay-jurnal .manual-sigiliu,
+#overlay-jurnal .manual-directiva {
+  color: #1a1a1a;
+  font-family: "Courier New", Courier, monospace;
 }
 
-/* Responsive — meniu ghid pe mobil */
+/* Splash setări */
+.btn-splash-setari, .meniu-limba-splash, .opt-limba { font-family: inherit; }
+.btn-splash-setari {
+  width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center;
+  background: rgba(15, 23, 42, 0.55); border: 1px solid rgba(148, 163, 184, 0.3); border-radius: 6px; cursor: pointer; color: #94a3b8;
+}
+.meniu-limba-splash { position: absolute; top: 100%; right: 0; margin-top: 0.4rem; padding: 0.65rem; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(34, 211, 238, 0.25); border-radius: 4px; min-width: 9rem; }
+.meniu-limba-optiuni { display: flex; gap: 0.35rem; }
+.opt-limba { flex: 1; padding: 0.35rem; font-size: 0.7rem; background: transparent; border: 1px solid rgba(148, 163, 184, 0.3); border-radius: 2px; cursor: pointer; color: #94a3b8; }
+.opt-limba.activ { color: var(--cyan); border-color: var(--cyan); }
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+
 @media (max-width: 1023px) {
-  .meniu-continut {
-    width: 100%;
-    min-height: auto;
-  }
-
-  .meniu-layout {
-    min-height: auto;
-  }
-
-  .meniu-ghid-rand {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .ghid-avatar-img {
-    width: min(220px, 70vw);
-    max-height: 280px;
-  }
-
-  .diagrama-circuit-cadru {
-    min-height: 160px;
-    max-height: 220px;
-  }
-
-  .chat-ghid-balon::before {
-    display: none;
-  }
+  .card-nivel-titlu { font-size: 0.88rem; }
 }
