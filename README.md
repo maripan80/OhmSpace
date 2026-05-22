@@ -6,7 +6,7 @@ Aplicația folosește o paradigmă de tip *gamified sandbox* în care utilizator
 
 ---
 
-## 🚀 Caracteristici Principale
+##  Caracteristici Principale
 
 * **Arhitectură Data-Driven:** Logica motorului de simulare (`app.js`) este complet decuplată de conținutul didactic (`manual.js`). Adăugarea sau modificarea nivelurilor se face fără modificarea codului sursă.
 * **Interactivitate în Timp Real:** Include un modul avansat cu potențiometru (rezistență variabilă) controlat prin slider tactil/mouse, oferind feedback matematic instantaneu.
@@ -17,7 +17,7 @@ Aplicația folosește o paradigmă de tip *gamified sandbox* în care utilizator
 
 ---
 
-## 🛠️ Stack Tehnologic
+##  Stack Tehnologic
 
 Proiectul este construit exclusiv pe standarde web native, respectând criteriul de eleganță, lizibilitate și optimizare a resurselor:
 
@@ -27,7 +27,7 @@ Proiectul este construit exclusiv pe standarde web native, respectând criteriul
 
 ---
 
-## 📦 Structura Proiectului
+##  Structura Proiectului
 
 ```text
 ├── index.html          # Structura UI principală și layout-ul responsive
