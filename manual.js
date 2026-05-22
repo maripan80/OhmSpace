@@ -288,7 +288,7 @@ var missionsData = [
     id: 5,
     type: "potentiometer",
     menuDesc: { ro: "Seră LED · 1,5 A · 8 Ω", en: "Greenhouse · 1.5 A · 8 Ω" },
-    title: { ro: "Misiunea 5 — Lux seră hidroponică", en: "Mission 5 — Greenhouse lux" },
+    title: { ro: "Misiunea 5 — Flux seră hidroponică", en: "Mission 5 — Greenhouse lux" },
     dialog: {
       ro: "Bio-dom: limitează la 1,5 A la 12 V. Montează potențiometrul și calibrează: R = 12/1,5 = 8 Ω.",
       en: "Bio-dome: limit to 1.5 A at 12 V. Insert potentiometer and calibrate: R = 12/1.5 = 8 Ω."
