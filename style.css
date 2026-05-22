@@ -138,7 +138,7 @@ button.piesa-inventar {
 
 /* Overlay victorie */
 .overlay-victorie:not(.hidden) { display: flex !important; background: rgba(0, 0, 0, 0.75); }
-/* Dosare manual + jurnal — estetică Papers, Please */
+
 .overlay-manual-dosar:not(.hidden) { display: flex !important; }
 
 #overlay-manual-tehnic .manual-foaie,
